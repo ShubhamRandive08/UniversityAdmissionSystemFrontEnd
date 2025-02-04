@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Majestic Admin Pro</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <link rel="stylesheet" href="assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico" />
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <script>
+        async function downloadTablePDF() {
+            let rs = confirm("Are you download the student report?")
+
+            if (rs) {
+                // const {jsPDF} = window.jspdf;
+                const doc = new window.jspdf.jsPDF({
+                    orientation: "landscape", //To handle wide table
+                    unit: "px",
+                    format: "a4"
+                });
+                const table = document.getElementById("recent-purchases-listing")
+                // Convert table to PDF
+                const td = new Date().toISOString().split('T')[0]
+                doc.text(`Report Generated On : ${td}`, 5, 15);
+                doc.autoTable({
+                    html: table,
+                    startY: 20,
+                    theme: "grid",
+                    styles: { fontSize: 6, cellPadding: 4 },
+                    margin: { top: 20, left: 10, right: 10 },
+                    horizontalPageBreak: true // Ensure the all column fit
+                });
+                doc.save("Admin" + td + "-Student-Report.pdf")
+            } else {
+                return false
+            }
+        }
+        function logout() {
+            const rs = confirm('Are You Sure To Logout?');
+
+            if (rs)
+                window.location.href = '../index.html'
+            else
+                return false
+        }
+
+        function NewStudent() {
+            window.location.href = 'pages/ui-features/new_student.html'
+        }
+
+        const today = new Date();
+
+
+        // Format the date (e.g., "December 8, 2024")
+        const formattedDate = today.toLocaleDateString('en-IN', {
+            weekday: 'long', // Day of the week (e.g., Monday)
+            year: 'numeric', // Full year (e.g., 2024)
+            month: 'long',   // Full month name (e.g., December)
+            day: 'numeric',   // Day of the month (e.g., 8)
+            timeZone: 'Asia/Kolkata' // Ensure the time zone is IST
+        });
+
+        function del(id) {
+
+            const r = confirm("Do you want to delete this record?");
+
+            if (r) {
+                axios.delete('http://localhost:3000/delStudent', {
+                    data: { "id": id }
+                }).then(
+                    responce => {
+                        alert(responce.data.message)
+                        window.location.href = 'index.html'
+                    }
+                )
+            } else {
+                return false
+            }
+        }
+
+        function searchData() {
+
+            let searchBox = document.getElementById('dataSearch')
+
+            searchBox.addEventListener('input', function () {
+                const searchTerm = searchBox.value.trim().toLowerCase(); // Get the search term, trim, and convert to lowercase
+
+                if (searchBox.value == '') {
+                    $('#dt').empty()
+                    // alert("Test")
+                    axios.get("http://localhost:3000/studData")
+                        .then(responce => {
+                            let l = responce.data.studData;
+                            for (let i = 0; i < l.length; i++) {
+                                var rowData = "<tr><td>" + l[i].id + "</td>";
+                                rowData += "<td>" + l[i].fname + "</td>";
+                                rowData += "<td>" + l[i].mname + "</td>";
+                                rowData += "<td>" + l[i].lname + "</td>";
+                                rowData += "<td>" + l[i].gender + "</td>";
+                                rowData += "<td>" + l[i].twelvem + "</td>";
+                                rowData += "<td>" + l[i].tenm + "</td>";
+                                rowData += "<td>" + l[i].address + "</td>";
+                                rowData += "<td>" + l[i].state + "</td>";
+                                rowData += "<td>" + l[i].fillfees + "</td>";
+                                rowData += "<td>" + l[i].addharno + "</td>";
+                                rowData += "<td>" + l[i].date + "</td>";
+                                rowData += "<td>" + l[i].tid + "</td>";
+                                rowData += "<td>" + l[i].tname + "</td>";
+                                $('#dt').append(rowData);
+                            }
+                        })
+
+                } else {
+                    $('#dt').empty();
+
+                    axios.get("http://localhost:3000/studData")
+                        .then(response => {
+                            let l = response.data.studData;
+                            const students = response.data.studData;
+                            const results = students.filter(student =>
+                                student.fname.toLowerCase().includes(searchTerm)
+                            );
+                            if (results.length > 0) {
+                                for (let i = 0; i < results.length; i++) {
+                                    var rowData = "<tr><td>" + results[i].id + "</td>";
+                                    rowData += "<td>" + results[i].fname + "</td>";
+                                    rowData += "<td>" + results[i].mname + "</td>";
+                                    rowData += "<td>" + results[i].lname + "</td>";
+                                    rowData += "<td>" + results[i].gender + "</td>";
+                                    rowData += "<td>" + results[i].twelvem + "</td>";
+                                    rowData += "<td>" + results[i].tenm + "</td>";
+                                    rowData += "<td>" + results[i].address + "</td>";
+                                    rowData += "<td>" + results[i].state + "</td>";
+                                    rowData += "<td>" + results[i].fillfees + "</td>";
+                                    rowData += "<td>" + results[i].addharno + "</td>";
+                                    rowData += "<td>" + results[i].date + "</td>";
+                                    rowData += "<td>" + results[i].tid + "</td>";
+                                    rowData += "<td>" + results[i].tname + "</td>";
+                                    $('#dt').append(rowData);
+                                }
+                            }
+                        });
+                }
+            })
+        }
+
+        function api() {
+            //   document.getElementById('tname').innerHTML = localStorage.getItem('tname')
+            document.getElementById("todaydate").textContent = formattedDate;
+
+            // API call for the getting the total  fees
+            axios.get('http://localhost:3000/totolfees')
+                .then(responce => {
+                    document.getElementById('ttlFees').innerHTML = (responce.data.ttl[0].total)
+                })
+
+            // API call for the getting the total submitted fees
+            axios.get('http://localhost:3000/totolcollectivefees')
+                .then(responce => {
+                    document.getElementById('submitedFees').innerHTML = (responce.data.total[0].totalcollectivefee)
+                })
+
+            // API call for the count the total student
+            axios.get('http://localhost:3000/studCount')
+                .then(responce => {
+                    document.getElementById('ttlStud').innerHTML = (responce.data.coutn[0].ttlstudent)
+                })
+
+            // API call for the count the total empty slot
+            axios.get('http://localhost:3000/emptySlot')
+                .then(responce => {
+                    document.getElementById('emptySlot').innerHTML = responce.data.emptySlot[0].emptyslot
+                })
+
+
+
+            axios.get("http://localhost:3000/studData")
+                .then(responce => {
+                    let l = responce.data.studData;
+
+                    for (let i = 0; i < l.length; i++) {
+
+                        var rowData = "<tr><td>" + l[i].id + "</td>";
+                        rowData += "<td>" + l[i].fname + "</td>";
+                        rowData += "<td>" + l[i].mname + "</td>";
+                        rowData += "<td>" + l[i].lname + "</td>";
+                        rowData += "<td>" + l[i].gender + "</td>";
+                        rowData += "<td>" + l[i].twelvem + "</td>";
+                        rowData += "<td>" + l[i].tenm + "</td>";
+                        rowData += "<td>" + l[i].address + "</td>";
+                        rowData += "<td>" + l[i].state + "</td>";
+                        rowData += "<td>" + l[i].fillfees + "</td>";
+                        rowData += "<td>" + l[i].addharno + "</td>";
+                        rowData += "<td>" + l[i].date + "</td>";
+                        rowData += "<td>" + l[i].tid + "</td>";
+                        rowData += "<td>" + l[i].tname + "</td>";
+                        rowData += "</tr>";
+                        $('#dt').append(rowData);
+                    }
+                })
+        }
+
+        function edit(id) {
+            localStorage.setItem('studentId', id)
+            window.location.href = "pages/forms/edit.html"
+        }
+
+    </script>
+</head>
+
+<body onload="api(), searchData()">
+    <div class="container-scroller">
+        <!-- partial:partials/_navbar.html -->
+        <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row ">
+            <div class="navbar-brand-wrapper d-flex justify-content-center bg-primary">
+                <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
+                    <button class="navbar-toggler navbar-toggler align-self-center" type="button"
+                        data-toggle="minimize">
+                        <span class="mdi mdi-sort-variant"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end bg-primary">
+                <ul class="navbar-nav me-lg-4 w-100">
+                    <li class="nav-item nav-search d-none d-lg-block w-100">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="search">
+                                    <i class="mdi mdi-magnify"></i>
+                                </span>
+                            </div>
+                            <input type="text" class="form-control" id="dataSearch" placeholder="Search First Name"
+                                aria-label="search" aria-describedby="search">
+                        </div>
+                    </li>
+                </ul>
+                <ul class="navbar-nav navbar-nav-right">
+                    <li class="nav-item nav-profile dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" id="profileDropdown">
+                            <span class="nav-profile-name text-black"><b>ADMIN</b></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
+                            aria-labelledby="profileDropdown">
+                            <a class="dropdown-item" onclick="logout()">
+                                <i class="mdi mdi-logout text-primary"></i>
+                                Logout
+                            </a>
+                        </div>
+                    </li>
+                    <li class="nav-item nav-settings d-none d-lg-flex">
+                        <a class="nav-link" href="#">
+                            <i class="mdi mdi-apps"></i>
+                        </a>
+                    </li>
+                </ul>
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                    data-toggle="offcanvas">
+                    <span class="mdi mdi-menu"></span>
+                </button>
+            </div>
+        </nav>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper ">
+            <!-- partial:partials/_sidebar.html -->
+            <nav class="sidebar sidebar-offcanvas bg-primary" id="sidebar">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index_admin.html">
+                            <i class="mdi mdi-home menu-icon text-white"></i>
+                            <span class="menu-title text-black"><b>Dashboard</b></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#form-elements" aria-expanded="false"
+                            aria-controls="form-elements">
+                            <i class="mdi mdi-view-headline menu-icon text-white"></i>
+                            <span class="menu-title text-black"><b>STAFF</b></span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <div class="collapse" id="form-elements">
+                            <ul class="nav flex-column sub-menu">
+                                <li class=""><a class="nav-link" href="pages/forms/admin_staff_member.html">Staff
+                                        Member</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <!-- <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
+              <i class="mdi mdi-chart-pie menu-icon"></i>
+              <span class="menu-title">STUDENT LIST</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="charts">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="pages/charts/student_list.html">STUDENT LIST</a></li>
+              </ul>
+            </div>
+          </li> -->
+                </ul>
+            </nav>
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+
+                    <div class="row ">
+                        <div class="col-md-12 grid-margin">
+                            <div class="d-flex justify-content-between flex-wrap">
+                                <div class="d-flex align-items-end flex-wrap">
+                                    <div class="me-md-3 me-xl-5">
+                                        <h2>Welcome Admin,</h2>
+                                        <p class="mb-md-0">Your analytics dashboard.</p>
+                                    </div>
+                                    <div class="d-flex">
+                                        <i class="mdi mdi-home text-muted hover-cursor"></i>
+                                        <p class="text-muted mb-0 hover-cursor">&nbsp;/&nbsp;Dashboard&nbsp;/&nbsp;</p>
+                                        <p class="text-primary mb-0 hover-cursor">Records</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-end flex-wrap">
+                                    <button type="button" onclick="downloadTablePDF()"
+                                        class="btn btn-light bg-white btn-icon me-3 d-none d-md-block ">
+                                        <i class="mdi mdi-download text-muted"></i>
+                                    </button>
+                                    <!-- <button type="button" class="btn btn-light bg-white btn-icon me-3 mt-2 mt-xl-0"
+                                        onclick="NewStudent()">
+                                        <i class="mdi mdi-plus text-muted"></i>
+                                    </button> -->
+                                    <button class="btn btn-primary mt-2 mt-xl-0" onclick="downloadTablePDF()">Download
+                                        Report</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body dashboard-tabs p-0">
+                                    <div class="tab-content py-0 px-0 border-left-0 border-bottom-0 border-right-0">
+                                        <div class="tab-pane fade show active" id="overview" role="tabpanel"
+                                            aria-labelledby="overview-tab">
+                                            <div class="d-flex flex-wrap justify-content-xl-between">
+                                                <div
+                                                    class="d-none d-xl-flex border-md-right flex-grow-1 align-items-center justify-content-left justify-content-md-center px-4 px-md-0 mx-1 mx-md-0 p-3 item">
+                                                    <div class="icon-box-secondary me-3">
+                                                        <i class="mdi mdi-calendar-heart"></i>
+                                                    </div>
+                                                    <div class="d-flex flex-column justify-content-around">
+                                                        <small class="mb-1 text-muted">Date</small>
+                                                        <div class="dropdown">
+                                                            <h5 class="mb-0 d-inline-block" id="todaydate"></h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="d-flex border-md-right flex-grow-1 align-items-center justify-content-left justify-content-md-center px-4 px-md-0 mx-1 mx-md-0 p-3 item">
+                                                    <div class="icon-box-secondary me-3">
+                                                        <i class="mdi mdi-currency-usd"></i>
+                                                    </div>
+                                                    <div class="d-flex flex-column justify-content-around">
+                                                        <small class="mb-1 text-muted">Total Fees</small>
+                                                        <h5 class="me-2 mb-0" id="ttlFees"></h5>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="d-flex border-md-right flex-grow-1 align-items-center justify-content-left justify-content-md-center px-4 px-md-0 mx-1 mx-md-0 p-3 item">
+                                                    <div class="icon-box-secondary me-3">
+                                                        <i class="mdi mdi-eye"></i>
+                                                    </div>
+                                                    <div class="d-flex flex-column justify-content-around">
+                                                        <small class="mb-1 text-muted">Submited Fees</small>
+                                                        <h5 class="me-2 mb-0" id="submitedFees"></h5>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="d-flex border-md-right flex-grow-1 align-items-center justify-content-left justify-content-md-center px-4 px-md-0 mx-1 mx-md-0 p-3 item">
+                                                    <div class="icon-box-secondary me-3">
+                                                        <i class="mdi mdi-download"></i>
+                                                    </div>
+                                                    <div class="d-flex flex-column justify-content-around">
+                                                        <small class="mb-1 text-muted">Total Students</small>
+                                                        <h5 class="me-2 mb-0" id="ttlStud"></h5>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="d-flex py-3 border-md-right flex-grow-1 align-items-center justify-content-left justify-content-md-center px-4 px-md-0 mx-1 mx-md-0 p-3 item">
+                                                    <div class="icon-box-secondary me-3">
+                                                        <i class="mdi mdi-flag"></i>
+                                                    </div>
+                                                    <div class="d-flex flex-column justify-content-around">
+                                                        <small class="mb-1 text-muted">Empty Slot</small>
+                                                        <h5 class="me-2 mb-0" id="emptySlot"></h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <p class="card-title">Collage Addmission</p>
+                                    <div class="table-responsive">
+                                        <table id="recent-purchases-listing" class="table">
+                                            <thead>
+                                                <tr style="text-align: center; background: green;">
+                                                    <th>ID</th>
+                                                    <th>First Name</th>
+                                                    <th>Middle Name</th>
+                                                    <th>Last Name</th>
+                                                    <th>Gender</th>
+                                                    <th>12<sup>th</sup> Marks</th>
+                                                    <th>10<sup>th</sup> Marks</th>
+                                                    <th>Address</th>
+                                                    <th>State</th>
+                                                    <th>Fill Fees</th>
+                                                    <th>Addhar Number</th>
+                                                    <th>Date</th>
+                                                    <th>Teacher ID</th>
+                                                    <th>Teacher Name</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody id="dt" style="text-align: center;">
+                                                <tr>
+                                                    <td>ID</td>
+                                                    <td>First Name</td>
+                                                    <td>Middle Name</td>
+                                                    <td>Last Name</td>
+                                                    <td>Gender</td>
+                                                    <td>12<sup>td</sup> Marks</td>
+                                                    <td>10<sup>td</sup> Marks</td>
+                                                    <td>Address</td>
+                                                    <td>State</td>
+                                                    <td>Fill Fees</td>
+                                                    <td>Addhar Number</td>
+                                                    <td>Date</td>
+                                                    <td>Teacher ID</td>
+                                                    <td>Teacher Name</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:partials/_footer.html -->
+                <footer class="footer">
+                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="float-none float-sm-end d-block mt-1 mt-sm-0 text-center">Major Project By Shubham
+                            B. Randive
+                            <i class="mdi mdi-heart text-danger"></i></span>
+                    </div>
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+
+    <!-- plugins:js -->
+    <script src="assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page-->
+    <script src="assets/vendors/chart.js/chart.umd.js"></script>
+    <script src="assets/vendors/datatables.net/jquery.dataTables.js"></script>
+    <script src="assets/vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+    <!-- End plugin js for this page-->
+    <!-- inject:js -->
+    <script src="assets/js/off-canvas.js"></script>
+    <script src="assets/js/hoverable-collapse.js"></script>
+    <script src="assets/js/template.js"></script>
+    <script src="assets/js/settings.js"></script>
+    <script src="assets/js/todolist.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page-->
+    <script src="assets/js/dashboard.js"></script>
+    <script src="assets/js/proBanner.js"></script>
+    <script src="serachScript.js"></script>
+
+    <!-- End custom js for this page-->
+    <script src="assets/js/jquery.cookie.js" type="text/javascript"></script>
+</body>
+
+</html>
