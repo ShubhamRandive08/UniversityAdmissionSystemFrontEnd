@@ -49,7 +49,13 @@
         }
 
         function Edit(id){
-            alert(id)
+            const rs = confirm('Do you wnat edit the record?')
+
+            if(rs){
+                window.location.href = 'admin_edit.html'
+            }else{
+                return 0
+            }
 
         }
 
