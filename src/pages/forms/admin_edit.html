@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <link rel="stylesheet" href="../../assets/vendors/select2/select2.min.css">
+    <link rel="stylesheet" href="../../assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<script>
+    function back(){
+        const rs = confirm("Are You Sure To Cancle?")
+        if(rs){
+            window.location.href = "../../index.html"
+        }else{
+            return false
+        }
+    }
+
+    function api(){
+        const id = localStorage.getItem('studentId')
+        
+        axios.post('http://localhost:3000/studDataOnId',{
+            "id" : id
+        })
+        .then(responce =>{
+            document.getElementById('fname').value = responce.data.data[0].fname  ;
+            document.getElementById('mname').value = responce.data.data[0].mname  ;
+            document.getElementById('lname').value = responce.data.data[0].lname  ;
+            document.getElementById('gender').value = responce.data.data[0].gender  ;
+            document.getElementById('twth').value = responce.data.data[0].twelvem  ;
+            document.getElementById('tenth').value = responce.data.data[0].tenm  ;
+            document.getElementById('add').value = responce.data.data[0].address  ;
+            document.getElementById('state').value = responce.data.data[0].state  ;
+            document.getElementById('ffees').value = responce.data.data[0].fillfees  ;
+            document.getElementById('aadhar').value = responce.data.data[0].addharno  ;
+        })
+    }
+
+    function upt(){
+        axios.put('http://localhost:3000/uptStudData',{
+            "fname" : document.getElementById('fname').value, 
+            "mname" : document.getElementById('mname').value, 
+            "lname" : document.getElementById('lname').value, 
+            "gender" : document.getElementById('gender').value, 
+            "twm" : document.getElementById('twth').value,
+            "tenm" : document.getElementById('tenth').value, 
+            "add" : document.getElementById('add').value, 
+            "state" : document.getElementById('state').value, 
+            "ffees" : document.getElementById('ffees').value,
+            "aadharno" : document.getElementById('aadhar').value, 
+            "id": localStorage.getItem('studentId')
+        })
+        .then(responce =>{
+            alert(responce.data.message)
+            window.location.href = '../../index.html'
+        })
+    }
+</script>
+
+<body onload="api()">
+    <div class="row">
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body d-flex justify-content-center align-items-center">
+                    <form class="forms-sample" >
+                        <div class="form-group">
+                            <label for="fname">First Name</label>
+                            <input type="text" class="form-control" id="fname" placeholder="First Name">
+                        </div>
+                        <div class="form-group ">
+                            <label for="mname">Middle Name</label>
+                            <input type="text" class="form-control" id="mname" placeholder="Middle Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="lname">Last Name</label>
+                            <input type="text" class="form-control" id="lname" placeholder="Last Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="Gender">Gender</label>
+                            <select class="form-control" name="" id="gender">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="twth">12<sup>th</sup>Marks</label>
+                            <input type="text" class="form-control" id="twth" placeholder="12th Marks">
+                        </div>
+                        <div class="form-group">
+                            <label for="tenth">10<sup>th</sup>Marks</label>
+                            <input type="text" class="form-control" id="tenth" placeholder="10th Marks">
+                        </div>
+                        <div class="form-group">
+                            <label for="add">Address</label>
+                            <input type="text" class="form-control" id="add" placeholder="Address">
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State</label>
+                            <input type="text" class="form-control" id="state" placeholder="State">
+                        </div>
+                        <div class="form-group">
+                            <label for="ffees">Fill Fees</label>
+                            <input type="text" class="form-control" id="ffees" placeholder="Fill Fees">
+                        </div>
+                        <div class="form-group">
+                            <label for="aadhar">Aadhar Number</label>
+                            <input type="text" maxlength="12" class="form-control" id="aadhar" placeholder="Aadhar Number">
+                        </div>
+                        <input type="button" class="btn btn-primary me-2" onclick="upt()" value="Update">
+                        <input type="button" class="btn btn-warning" onclick="back()" value="Cancel">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
