@@ -22,35 +22,153 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/7.1.0/docx.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/docx@8.0.2/build/index.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.0.2/docx.umd.min.js"></script> -->
+
+
+
 
     <script>
-        async function downloadTablePDF() {
-            let rs = confirm("Are you download the student report?")
+        async function downloadTableReport() {
+            const { value: fileType } = await Swal.fire({
+                title: "Download Student Report",
+                text: "Choose a format for the report:",
+                icon: "question",
+                input: "radio",
+                inputOptions: {
+                    pdf: "PDF Format",
+                    docx: "DOCX Format",
+                    xlsx: "Excel Format"
+                },
+                inputValidator: (value) => {
+                    if (!value) {
+                        return "You need to choose a format!";
+                    }
+                },
+                showCancelButton: true,
+                confirmButtonText: "Generate",
+                cancelButtonText: "Cancel",
+            });
 
-            if (rs) {
-                // const {jsPDF} = window.jspdf;
-                const doc = new window.jspdf.jsPDF({
-                    orientation: "landscape", //To handle wide table
-                    unit: "px",
-                    format: "a4"
+            if (!fileType) return;
+
+            Swal.fire({
+                title: "Generating Report...",
+                text: "Please wait while we create your report.",
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            setTimeout(() => { // Simulate processing time
+                const table = document.getElementById("recent-purchases-listing");
+                const td = new Date().toISOString().split('T')[0];
+
+                if (fileType === "pdf") {
+                    generatePDF(table, td);
+                } else if (fileType === "docx") {
+                    generateDOCX(table, td);
+                } else if (fileType === "xlsx") {
+                    generateExcel(table, td);
+                }
+
+                Swal.fire({
+                    title: "Download Complete!",
+                    text: "Your student report has been successfully downloaded.",
+                    icon: "success",
+                    confirmButtonText: "OK"
                 });
-                const table = document.getElementById("recent-purchases-listing")
-                // Convert table to PDF
-                const td = new Date().toISOString().split('T')[0]
-                doc.text(`Report Generated On : ${td}`, 5, 15);
-                doc.autoTable({
-                    html: table,
-                    startY: 20,
-                    theme: "grid",
-                    styles: { fontSize: 6, cellPadding: 4 },
-                    margin: { top: 20, left: 10, right: 10 },
-                    horizontalPageBreak: true // Ensure the all column fit
-                });
-                doc.save("Admin" + td + "-Student-Report.pdf")
-            } else {
-                return false
-            }
+
+            }, 1500);
         }
+
+        function generatePDF(table, td) {
+            const doc = new window.jspdf.jsPDF({
+                orientation: "landscape",
+                unit: "px",
+                format: "a4"
+            });
+
+            doc.text(`Report Generated On: ${td}`, 10, 15);
+            doc.autoTable({
+                html: table,
+                startY: 25,
+                theme: "grid",
+                styles: { fontSize: 6, cellPadding: 4 },
+                margin: { top: 20, left: 10, right: 10 },
+                horizontalPageBreak: true
+            });
+
+            doc.save(`Admin-${td}-Student-Report.pdf`);
+        }
+
+        function generateDOCX(table, td) {
+            const { Document, Packer, Paragraph, Table, TableRow, TableCell } = window.docx;
+
+            const rows = Array.from(table.rows).map(row =>
+                new TableRow({
+                    children: Array.from(row.cells).map(cell =>
+                        new TableCell({
+                            children: [new Paragraph(cell.textContent)],
+                        })
+                    ),
+                })
+            );
+
+            const doc = new Document({
+                sections: [
+                    {
+                        properties: {},
+                        children: [
+                            new Paragraph(`Report Generated On: ${td}`),
+                            new Table({ rows: rows })
+                        ]
+                    }
+                ]
+            });
+
+            Packer.toBlob(doc).then(blob => {
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = `Admin-${td}-Student-Report.docx`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        }
+
+        function generateExcel(table, td) {
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.table_to_sheet(table);
+
+            // Convert table to an array of arrays
+            const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+
+            // Ensure Aadhaar numbers are treated as text
+            data.forEach(row => {
+                row.forEach((cell, index) => {
+                    if (typeof cell === "number" && cell.toString().length >= 12) {
+                        row[index] = `'${cell}`; // Force text format in Excel
+                    }
+                });
+            });
+
+            // Create a new worksheet with the modified data
+            const newWs = XLSX.utils.aoa_to_sheet(data);
+
+            // Append sheet to workbook
+            XLSX.utils.book_append_sheet(wb, newWs, "Student Report");
+
+            const fileName = `Admin-${td}-Student-Report.xlsx`;
+            XLSX.writeFile(wb, fileName);
+        }
+
+
+
         function logout() {
             // SweetAlert2 custom logout confirmation
             Swal.fire({
@@ -80,11 +198,6 @@
                     window.location.href = '/collage_addmission_process_project/index.html';
                 }
             });
-        }
-
-
-        function NewStudent() {
-            window.location.href = 'pages/ui-features/new_student.html'
         }
 
         const today = new Date();
@@ -184,7 +297,6 @@
         }
 
         function api() {
-            //   document.getElementById('tname').innerHTML = localStorage.getItem('tname')
             document.getElementById("todaydate").textContent = formattedDate;
 
             // API call for the getting the total  fees
@@ -323,18 +435,27 @@
                             </ul>
                         </div>
                     </li>
-                    <!-- <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
-              <i class="mdi mdi-chart-pie menu-icon"></i>
-              <span class="menu-title">STUDENT LIST</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="charts">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="pages/charts/student_list.html">STUDENT LIST</a></li>
-              </ul>
-            </div>
-          </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="pages/forms/Add_Events.html">
+                            <i class="mdi mdi-calendar-clock menu-icon text-white"></i>
+                            <span class="menu-title text-black"><b>Add Events</b></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pages/forms/Added_Events.html">
+                            <i class="mdi mdi-calendar-plus menu-icon text-white"></i>
+                            <span class="menu-title text-black"><b>Added Events</b></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pages/forms/Publish_Report.html">
+                            <i class="mdi mdi-upload menu-icon text-white"></i>
+                            <span class="menu-title text-black"><b>Publish Reports</b></span>
+                        </a>
+                    </li>
+
+
+
                 </ul>
             </nav>
             <!-- partial -->
@@ -356,7 +477,7 @@
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-end flex-wrap">
-                                    <button type="button" onclick="downloadTablePDF()"
+                                    <button type="button" onclick="downloadTableReport()"
                                         class="btn btn-light bg-white btn-icon me-3 d-none d-md-block ">
                                         <i class="mdi mdi-download text-muted"></i>
                                     </button>
@@ -364,7 +485,8 @@
                                         onclick="NewStudent()">
                                         <i class="mdi mdi-plus text-muted"></i>
                                     </button> -->
-                                    <button class="btn btn-primary mt-2 mt-xl-0" onclick="downloadTablePDF()">Download
+                                    <button class="btn btn-primary mt-2 mt-xl-0"
+                                        onclick="downloadTableReport()">Download
                                         Report</button>
                                 </div>
                             </div>

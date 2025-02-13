@@ -19,14 +19,14 @@
   <script src="https://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <!-- Include SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
   <script>
     function logout() {
       // SweetAlert2 custom logout confirmation
       Swal.fire({
-        title: 'Are you sure you want to logout?', 
+        title: 'Are you sure you want to logout?',
         text: "You will be redirected to the home page.",
         icon: 'warning',
         showCancelButton: true,
@@ -72,46 +72,57 @@
     }
 
     function studAdd() {
-      if (document.getElementById('fname').value == '' || document.getElementById('mname').value == '' || document.getElementById('lname').value == '' || document.getElementById('gender').value == '' || document.getElementById('dob').value == '' || document.getElementById('twelveth').value == '' || document.getElementById('tenth').value == '' || document.getElementById('add').value == '' || document.getElementById('state').value == '' || document.getElementById('mb').value == '' || document.getElementById('pcode').value == '' || document.getElementById('city').value == '' || document.getElementById('fee').value == '' || document.getElementById('aadharno').value == '') {
-        Swal.fire({
-                    icon: 'warning',  // Success icon (green check)
-                    title: 'Please Fill All Details!',
-                    timer: 2000,  // Display for 3 seconds
-                    background: 'rgba(0, 0, 0, 0.5)',  // Glassmorphism effect
-                    backdrop: 'rgba(0, 0, 0, 0.8)',  // Semi-transparent background
-                    color: '#fff',  // Text color
-                    showConfirmButton: false,  // Hide confirm button
-                    position: 'top',  // Centered position
-                    toast: false,  // Not as toast (fixed popup)
-                    showClass: {
-                        popup: 'animate__animated animate__fadeInDown',  // Animation for popup
-                    },
-                    hideClass: {
-                        popup: 'animate__animated animate__fadeOutUp',  // Animation for hiding
-                    },
-                });
-      } else {
-        axios.post('http://localhost:3000/insertStudent', {
-          "fname": document.getElementById('fname').value,
-          "mname": document.getElementById('mname').value,
-          "lname": document.getElementById('lname').value,
-          "gender": document.getElementById('gender').value,
-          "dob": document.getElementById('dob').value,
-          "twelvem": document.getElementById('twelveth').value,
-          "tenm": document.getElementById('tenth').value,
-          "add": document.getElementById('add').value,
-          "state": document.getElementById('state').value,
-          "mb": document.getElementById('mb').value,
-          "city": document.getElementById('city').value,
-          "fee": document.getElementById('fee').value,
-          "addharno": document.getElementById('aadharno').value,
-          "tid": localStorage.getItem('tid'),
-          "tname": localStorage.getItem('tname'),
-          "pcode": document.getElementById('pcode').value,
-          "date": formattedDate
-        })
-          .then(responce => {
+      axios.post('http://localhost:3000/getStatus', {
+        "sid": localStorage.getItem('tid')
+      })
+        .then(responce => {
+          if (responce.data.StatusData[0].stutas == 'lock') {
             Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'You Cant Able To Make Addmission. Please Contact with ADMIN.',
+            });
+          } else {
+            if (document.getElementById('fname').value == '' || document.getElementById('mname').value == '' || document.getElementById('lname').value == '' || document.getElementById('gender').value == '' || document.getElementById('dob').value == '' || document.getElementById('twelveth').value == '' || document.getElementById('tenth').value == '' || document.getElementById('add').value == '' || document.getElementById('state').value == '' || document.getElementById('mb').value == '' || document.getElementById('pcode').value == '' || document.getElementById('city').value == '' || document.getElementById('fee').value == '' || document.getElementById('aadharno').value == '') {
+              Swal.fire({
+                icon: 'warning',  // Success icon (green check)
+                title: 'Please Fill All Details!',
+                timer: 2000,  // Display for 3 seconds
+                background: 'rgba(0, 0, 0, 0.5)',  // Glassmorphism effect
+                backdrop: 'rgba(0, 0, 0, 0.8)',  // Semi-transparent background
+                color: '#fff',  // Text color
+                showConfirmButton: false,  // Hide confirm button
+                position: 'top',  // Centered position
+                toast: false,  // Not as toast (fixed popup)
+                showClass: {
+                  popup: 'animate__animated animate__fadeInDown',  // Animation for popup
+                },
+                hideClass: {
+                  popup: 'animate__animated animate__fadeOutUp',  // Animation for hiding
+                },
+              });
+            } else {
+              axios.post('http://localhost:3000/insertStudent', {
+                "fname": document.getElementById('fname').value,
+                "mname": document.getElementById('mname').value,
+                "lname": document.getElementById('lname').value,
+                "gender": document.getElementById('gender').value,
+                "dob": document.getElementById('dob').value,
+                "twelvem": document.getElementById('twelveth').value,
+                "tenm": document.getElementById('tenth').value,
+                "add": document.getElementById('add').value,
+                "state": document.getElementById('state').value,
+                "mb": document.getElementById('mb').value,
+                "city": document.getElementById('city').value,
+                "fee": document.getElementById('fee').value,
+                "addharno": document.getElementById('aadharno').value,
+                "tid": localStorage.getItem('tid'),
+                "tname": localStorage.getItem('tname'),
+                "pcode": document.getElementById('pcode').value,
+                "date": formattedDate
+              })
+                .then(responce => {
+                  Swal.fire({
                     icon: 'success',  // Success icon (green check)
                     title: 'Student Admission Conformed!',
                     timer: 3000,  // Display for 3 seconds
@@ -122,32 +133,35 @@
                     position: 'top',  // Centered position
                     toast: false,  // Not as toast (fixed popup)
                     showClass: {
-                        popup: 'animate__animated animate__fadeInDown',  // Animation for popup
+                      popup: 'animate__animated animate__fadeInDown',  // Animation for popup
                     },
                     hideClass: {
-                        popup: 'animate__animated animate__fadeOutUp',  // Animation for hiding
+                      popup: 'animate__animated animate__fadeOutUp',  // Animation for hiding
                     },
-                });
-            document.getElementById('fname').value = '';
-            document.getElementById('mname').value = '';
-            document.getElementById('lname').value = '';
-            document.getElementById('gender').value = '';
-            document.getElementById('dob').value = '';
-            document.getElementById('twelveth').value = '';
-            document.getElementById('tenth').value = '';
-            document.getElementById('add').value = '';
-            document.getElementById('state').value = '';
-            document.getElementById('mb').value = '';
-            document.getElementById('city').value = '';
-            document.getElementById('fee').value = '';
-            document.getElementById('aadharno').value = '';
-            document.getElementById('tid').value = '';
-            document.getElementById('tname').value = '';
-            document.getElementById('pcode').value = '';
+                  });
+                  document.getElementById('fname').value = '';
+                  document.getElementById('mname').value = '';
+                  document.getElementById('lname').value = '';
+                  document.getElementById('gender').value = '';
+                  document.getElementById('dob').value = '';
+                  document.getElementById('twelveth').value = '';
+                  document.getElementById('tenth').value = '';
+                  document.getElementById('add').value = '';
+                  document.getElementById('state').value = '';
+                  document.getElementById('mb').value = '';
+                  document.getElementById('city').value = '';
+                  document.getElementById('fee').value = '';
+                  document.getElementById('aadharno').value = '';
+                  document.getElementById('tid').value = '';
+                  document.getElementById('tname').value = '';
+                  document.getElementById('pcode').value = '';
 
 
-          })
-      }
+                })
+            }
+
+          }
+        })
     }
 
   </script>
@@ -255,6 +269,12 @@
                 </li>
               </ul>
             </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../../pages/charts/events.html">
+              <i class="mdi mdi-calendar-plus menu-icon text-black"></i>
+              <span class="menu-title">Events</span>
+            </a>
           </li>
         </ul>
       </nav>

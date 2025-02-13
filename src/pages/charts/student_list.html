@@ -25,31 +25,44 @@
 
   <script>
     async function downloadTablePDF() {
-      let rs = confirm("Are you download the student report?")
+      Swal.fire({
+        title: "Are you sure?",
+        text: "Do you want to download the student report?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, download it!"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const doc = new window.jspdf.jsPDF({
+            orientation: "landscape",
+            unit: "px",
+            format: "a4"
+          });
+          const table = document.getElementById("recent-purchases-listing");
+          const td = new Date().toISOString().split('T')[0];
 
-      if (rs) {
-        // const {jsPDF} = window.jspdf;
-        const doc = new window.jspdf.jsPDF({
-          orientation: "landscape", //To handle wide table
-          unit: "px",
-          format: "a4"
-        });
-        const table = document.getElementById("recent-purchases-listing")
-        const td = new Date().toISOString().split('T')[0]
-        doc.text(`Report Generated On : ${td}`, 8, 15);
-        // Convert table to PDF
-        doc.autoTable({
-          html: table,
-          startY: 20,
-          theme: "grid",
-          styles: { fontSize: 6, cellPadding: 4 },
-          margin: { top: 20, left: 10, right: 10 },
-          horizontalPageBreak: true // Ensure the all column fit
-        });
-        doc.save(`Student-List-Data on ${td}.pdf`)
-      } else {
-        return false
-      }
+          doc.text(`Report Generated On: ${td}`, 10, 15);
+          doc.autoTable({
+            html: table,
+            startY: 25,
+            theme: "grid",
+            styles: { fontSize: 6, cellPadding: 4 },
+            margin: { top: 20, left: 10, right: 10 },
+            horizontalPageBreak: true
+          });
+
+          doc.save(localStorage.getItem('tname') + td + "-Student-Report.pdf");
+
+          Swal.fire({
+            title: "Downloaded!",
+            text: "The student report has been saved successfully.",
+            icon: "success",
+            confirmButtonColor: "#3085d6"
+          });
+        }
+      });
     }
     function logout() {
       // SweetAlert2 custom logout confirmation
@@ -284,6 +297,12 @@
                 </li>
               </ul>
             </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../../pages/charts/events.html">
+              <i class="mdi mdi-calendar-plus menu-icon text-black"></i>
+              <span class="menu-title">Eventss</span>
+            </a>
           </li>
         </ul>
       </nav>

@@ -55,15 +55,19 @@
     }
 
     function api() {
+        
       document.getElementById('tname').innerHTML = localStorage.getItem('tname')
 
-      axios.get("http://localhost:3000/Sdata")
+      axios.get("http://localhost:3000/GetEvent")
         .then(responce => {
-          let l = responce.data.data;
+          let l = responce.data.EventData;
+          console.log(l)
 
           for (let i = 0; i < l.length; i++) {
-            var rowData = "<tr><td>" + l[i].tname + "</td>";
-            rowData += "<td>" + l[i].email + "</td>";
+            var rowData = "<tr><td>" + l[i].event_title + "</td>";
+            rowData += "<td>" + l[i].event_date + "</td>";
+            rowData += "<td>" + l[i].event_time + "</td>";
+            
             // rowData += "<td>" + l[i].username + "</td>";
 
 
@@ -169,26 +173,24 @@
       </div>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="../../pages/charts/events.html">
-        <i class="mdi mdi-calendar-plus menu-icon text-black"></i>
-        <span class="menu-title">Events</span>
-      </a>
-    </li>
+        <a class="nav-link" href="../../pages/charts/events.html">
+            <i class="mdi mdi-calendar-plus menu-icon text-black"></i>
+          <span class="menu-title">Events</span>
+        </a>
+      </li>
     </ul>
     </nav>
-    <div class="col-lg-12 grid-margin stretch-card">
+    <div class="col-lg-10 grid-margin stretch-card">
       <div class="card">
         <div class="card-body">
-          <h1 style="font-size: 1.3rem;" class="card-title">ADMIN STAFF</h1>
-          <p class="card-description">
-            Staff<code>/ Staff Member</code>
-          </p>
+          <h1 style="font-size: 1.3rem;" class="card-title">Your Events</h1>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>Admin Name</th>
-                  <th>Email</th>
+                  <th>Event Title</th>
+                  <th>Date</th>
+                  <th>Time</th>
                 </tr>
               </thead>
               <tbody id="dt">

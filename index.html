@@ -139,8 +139,8 @@ function signIn() {
                         html: '<p style="font-weight:bold; color:#4CAF50;">Welcome back, ' + response.data.data[0].tname + '!</p>',
                         // showConfirmButton: false,
                         timer: 2000,
-                        background: 'rgba(0, 0, 0, 0.5)', // Glassmorphism effect
-                        backdrop: 'rgba(0, 0, 0, 0.8)',
+                        background: 'rgba(0, 0, 0)', // Glassmorphism effect
+                        // backdrop: 'rgba(0, 0, 0)',
                         color: '#fff',
                         didClose: () => {
                             window.location.href = 'src/index.html';
@@ -167,7 +167,7 @@ function signIn() {
                     showClass: {
                         popup: 'animate__animated animate__shakeX'
                     },
-                    background: 'rgba(255, 255, 255, 0.3)',
+                    background: 'rgba(0, 0, 0)',
                     color: '#fff'
                 });
                 console.error(error);
@@ -175,6 +175,12 @@ function signIn() {
         }, 2000);
     }
 }
+
+function setCount() {
+    if (!localStorage.getItem('newEventCount')) {
+      localStorage.setItem('newEventCount', 0);
+    }
+  }
 
 </script>
 <style>
@@ -195,7 +201,7 @@ function signIn() {
  
 
 </style>
-<body>
+<body onload="setCount()">
   <div class="container-scroller">
     <div class="container-fluid page-body-wrapper full-page-wrapper">
       <div class="content-wrapper d-flex align-items-center auth px-0">
