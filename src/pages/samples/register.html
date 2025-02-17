@@ -18,20 +18,29 @@
   <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
   <script src="https://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
-     function setCount() {
-    if (!localStorage.getItem('newEventCount')) {
-      localStorage.setItem('newEventCount', 0);
+    function setCount() {
+      if (!localStorage.getItem('newEventCount')) {
+        localStorage.setItem('newEventCount', 0);
+      }
     }
-  }
   </script>
 </head>
 
 <script>
   function signUp() {
-    // alert('Test')
-    if (document.getElementById('name').value == '' || document.getElementById('email').value == '' || document.getElementById('password').value == '' || document.getElementById('username').value == '') {
-      alert('Please fill all the fields');
+    if (
+      document.getElementById('name').value === '' ||
+      document.getElementById('email').value === '' ||
+      document.getElementById('password').value === '' ||
+      document.getElementById('username').value === ''
+    ) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Oops...',
+        text: 'Please fill all the fields!',
+      });
     } else {
       axios.post('http://localhost:3000/insertStaff', {
         "tname": document.getElementById('name').value,
@@ -39,13 +48,26 @@
         "username": document.getElementById('username').value,
         "password": document.getElementById('password').value
       })
-        .then(responce => {
-          alert(responce.data.message)
-          window.location.href = '/collage_addmission_process_project/index.html'
+        .then(response => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: response.data.message,
+          }).then(() => {
+            window.location.href = '/collage_addmission_process_project/index.html';
+          });
         })
+        .catch(error => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Something went wrong. Please try again.',
+          });
+          console.error('Error:', error);
+        });
     }
-
   }
+
 </script>
 
 <body onload="setCount()">
