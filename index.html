@@ -23,74 +23,6 @@
 </head>
 
 <script>
-//   function signIn() {
-//     let email = document.getElementById('Email').value;
-//     let password = document.getElementById('Pass').value;
-
-//     if (email === '' || password === '') {
-//         Swal.fire({
-//             icon: 'warning',
-//             title: 'Oops...',
-//             text: 'Please fill all details!',
-//             showClass: {
-//                 popup: 'animate__animated animate__shakeX' // Shake animation on error
-//             }
-//         });
-//     } else {
-//         // Custom animated loader
-//         Swal.fire({
-//             title: 'Signing in...',
-//             html: '<div class="custom-loader"></div><p style="margin-top:10px;">Please wait...</p>',
-//             allowOutsideClick: false,
-//             showConfirmButton: false
-//         });
-
-//         // Wait for 2 seconds before sending request
-//         setTimeout(() => {
-//             axios.post('http://localhost:3000/staff', {
-//                 "email": email,
-//                 "pass": password
-//             })
-//             .then(response => {
-//                 if (response.data.status == '200') {
-//                     localStorage.setItem('tname', response.data.data[0].tname);
-//                     localStorage.setItem('tid', response.data.data[0].sid);
-
-//                     Swal.fire({
-//                         icon: 'success',
-//                         title: '🎉 Login Successful!',
-//                         html: '<p style="color: #4CAF50; font-weight: bold;">Welcome back!</p>',
-//                         showConfirmButton: false,
-//                         timer: 2000,
-//                         didClose: () => {
-//                             window.location.href = 'src/index.html';
-//                         }
-//                     });
-//                 } else {
-//                     Swal.fire({
-//                         icon: 'error',
-//                         title: 'Login Failed!',
-//                         text: response.data.message,
-//                         showClass: {
-//                             popup: 'animate__animated animate__headShake' // Head shake effect
-//                         }
-//                     });
-//                 }
-//             })
-//             .catch(error => {
-//                 Swal.fire({
-//                     icon: 'error',
-//                     title: 'Error!',
-//                     text: 'Something went wrong. Please try again.',
-//                     showClass: {
-//                         popup: 'animate__animated animate__shakeX' // Shake animation
-//                     }
-//                 });
-//                 console.error(error);
-//             });
-//         }, 2000);
-//     }
-// }
 function signIn() {
     let email = document.getElementById('Email').value;
     let password = document.getElementById('Pass').value;
@@ -183,24 +115,6 @@ function setCount() {
   }
 
 </script>
-<style>
-  /* .custom-loader {
-    border: 4px solid rgba(0, 0, 0, 0.1);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border-left-color: #4CAF50;
-    animation: spin 1s linear infinite;
-    display: inline-block;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-} */
- 
-
-</style>
 <body onload="setCount()">
   <div class="container-scroller">
     <div class="container-fluid page-body-wrapper full-page-wrapper">
@@ -208,7 +122,7 @@ function setCount() {
         <div class="row w-100 mx-0">
           <div class="col-lg-4 mx-auto">
             <div class="auth-form-light text-left py-5 px-4 px-sm-5">
-              <h4>Hello TEACHERS ! let's get started</h4>
+              <h4 id="heading">Hello TEACHERS ! let's get started</h4>
               <h6 class="font-weight-light">Sign in to continue.</h6>
               <form class="pt-3">
                 <div class="form-group">
@@ -222,15 +136,11 @@ function setCount() {
                     type="button" value ="SIGN IN">
                 </div>
                 <div class="my-2 d-flex justify-content-between align-items-center">
-                  <a href="#" class="auth-link text-black">Forgot password?</a>
+                  <a href="#" class="auth-link text-black" id="forgat-pass">Forgot password?</a>
                 </div>
-                <div class="text-center mt-4 font-weight-light">
-                  Don't have an account?
-                  <a href="src/pages/samples/register.html" class="text-primary">Create</a>
+                <div class="text-center mt-4 font-weight-light" id="dont-ac">Don't have an account?<a href="src/pages/samples/register.html" id="create-user" class="text-primary">Create</a>
                 </div>
-                <div class="text-center mt-4 font-weight-light">
-                  Admin Login
-                  <a href="src/pages/samples/admin_login.html" class="text-primary">Login</a>
+                <div class="text-center mt-4 font-weight-light" id="admin-login">Admin Login<a href="src/pages/samples/admin_login.html" id="ad-login" class="text-primary">Login</a>
                 </div>
               </form>
             </div>
