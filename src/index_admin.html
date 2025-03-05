@@ -245,7 +245,7 @@
                             let l = responce.data.studData;
                             for (let i = 0; i < l.length; i++) {
                                 var rowData = "<tr><td>" + l[i].id + "</td>";
-                                rowData += "<td>" + l[i].fname + "</td>";
+                                rowData += "<td  id='name'>" + l[i].fname + "</td>";
                                 rowData += "<td>" + l[i].mname + "</td>";
                                 rowData += "<td>" + l[i].lname + "</td>";
                                 rowData += "<td>" + l[i].gender + "</td>";
@@ -275,7 +275,7 @@
                             if (results.length > 0) {
                                 for (let i = 0; i < results.length; i++) {
                                     var rowData = "<tr><td>" + results[i].id + "</td>";
-                                    rowData += "<td>" + results[i].fname + "</td>";
+                                    rowData += "<td id='name'>" + results[i].fname + "</td>";
                                     rowData += "<td>" + results[i].mname + "</td>";
                                     rowData += "<td>" + results[i].lname + "</td>";
                                     rowData += "<td>" + results[i].gender + "</td>";
@@ -332,7 +332,7 @@
                     for (let i = 0; i < l.length; i++) {
 
                         var rowData = "<tr><td>" + l[i].id + "</td>";
-                        rowData += "<td>" + l[i].fname + "</td>";
+                        rowData += "<td id='name'>" + l[i].fname + "</td>";
                         rowData += "<td>" + l[i].mname + "</td>";
                         rowData += "<td>" + l[i].lname + "</td>";
                         rowData += "<td>" + l[i].gender + "</td>";

@@ -23,98 +23,112 @@
 </head>
 
 <script>
-function signIn() {
+  function signIn() {
     let email = document.getElementById('Email').value;
     let password = document.getElementById('Pass').value;
 
     if (email === '' || password === '') {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Oops...',
-            text: 'Please fill all details!',
-            showClass: {
-                popup: 'animate__animated animate__shakeX' // Shake effect for empty fields
-            },
-            background: 'rgba(255, 255, 255, 0.3)', // Glassmorphism effect
-            backdrop: `
+      Swal.fire({
+        icon: 'warning',
+        title: 'Oops...',
+        text: 'Please fill all details!',
+        showClass: {
+          popup: 'animate__animated animate__shakeX' // Shake effect for empty fields
+        },
+        background: 'rgba(255, 255, 255, 0.3)', // Glassmorphism effect
+        backdrop: `
                 rgba(0, 0, 0)
                 url("https://i.gifer.com/origin/11/11e18f26e1c549885c1c5c99860e2273.gif") center no-repeat
             `,
-            color: '#fff'
-        });
+        color: '#fff'
+      });
     } else {
-        // Custom animated loader
-        Swal.fire({
-            title: 'Authenticating...',
-            html: '<div class="neon-loader"></div><p style="margin-top:10px; font-weight:bold; color:#fff;">Please wait...</p>',
-            allowOutsideClick: false,
-            showConfirmButton: false,
-            background: 'rgba(0, 0, 0)',
-            color: '#fff',
-            // timer : 1000
-        });
+      // Custom animated loader
+      Swal.fire({
+        title: 'Authenticating...',
+        html: '<div class="neon-loader"></div><p style="margin-top:10px; font-weight:bold; color:#fff;">Please wait...</p>',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        background: 'rgba(0, 0, 0)',
+        color: '#fff',
+        // timer : 1000
+      });
 
-        // Simulate a loading delay (2 seconds) before sending request
-        setTimeout(() => {
-            axios.post('http://localhost:3000/staff', {
-                "email": email,
-                "pass": password
-            })
-            .then(response => {
-                if (response.data.status == '200') {
-                    localStorage.setItem('tname', response.data.data[0].tname);
-                    localStorage.setItem('tid', response.data.data[0].sid);
+      // Simulate a loading delay (2 seconds) before sending request
+      setTimeout(() => {
+        axios.post('http://localhost:3000/staff', {
+          "email": email,
+          "pass": password
+        })
+          .then(response => {
+            if (response.data.status == '200') {
+              localStorage.setItem('tname', response.data.data[0].tname);
+              localStorage.setItem('tid', response.data.data[0].sid);
 
-                    Swal.fire({
-                        icon: 'success',
-                        title: '🚀 Login Successful!',
-                        html: '<p style="font-weight:bold; color:#4CAF50;">Welcome back, ' + response.data.data[0].tname + '!</p>',
-                        // showConfirmButton: false,
-                        timer: 2000,
-                        background: 'rgba(0, 0, 0)', // Glassmorphism effect
-                        // backdrop: 'rgba(0, 0, 0)',
-                        color: '#fff',
-                        didClose: () => {
-                            window.location.href = 'src/index.html';
-                        }
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Login Failed!',
-                        text: response.data.message,
-                        showClass: {
-                            popup: 'animate__animated animate__headShake'
-                        },
-                        background: 'rgba(0, 0, 0)',
-                        color: '#fff'
-                    });
-                }
-            })
-            .catch(error => {
+              if (response.data.data[0].stutas == 'unlock') {
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Something went wrong. Please try again.',
-                    showClass: {
-                        popup: 'animate__animated animate__shakeX'
-                    },
-                    background: 'rgba(0, 0, 0)',
-                    color: '#fff'
+                  icon: 'success',
+                  title: '🚀 Login Successful!',
+                  html: '<p style="font-weight:bold; color:#4CAF50;">Welcome back, ' + response.data.data[0].tname + '!</p>',
+                  // showConfirmButton: false,
+                  timer: 2000,
+                  background: 'rgba(0, 0, 0)', // Glassmorphism effect
+                  // backdrop: 'rgba(0, 0, 0)',
+                  color: '#fff',
+                  didClose: () => {
+                    if (response.data.data[0].stutas == 'unlock') {
+                      window.location.href = 'src/index.html';
+                    } else {
+                      return false
+                    }
+                  }
                 });
-                console.error(error);
-            });
-        }, 2000);
-    }
-}
+              } else {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error!',
+                  text: 'Your Profile Has Been Locked. Please Contact with ADMIN.',
+                });
+              }
 
-function setCount() {
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Login Failed!',
+                text: response.data.message,
+                showClass: {
+                  popup: 'animate__animated animate__headShake'
+                },
+                background: 'rgba(0, 0, 0)',
+                color: '#fff'
+              });
+            }
+          })
+          .catch(error => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'Something went wrong. Please try again.',
+              showClass: {
+                popup: 'animate__animated animate__shakeX'
+              },
+              background: 'rgba(0, 0, 0)',
+              color: '#fff'
+            });
+            console.error(error);
+          });
+      }, 2000);
+    }
+  }
+
+  function setCount() {
     if (!localStorage.getItem('newEventCount')) {
       localStorage.setItem('newEventCount', 0);
     }
   }
 
 </script>
+
 <body onload="setCount()">
   <div class="container-scroller">
     <div class="container-fluid page-body-wrapper full-page-wrapper">
@@ -133,14 +147,16 @@ function setCount() {
                 </div>
                 <div class="mt-3 d-grid gap-2">
                   <input class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" onclick="signIn()"
-                    type="button" value ="SIGN IN">
+                    type="button" value="SIGN IN">
                 </div>
                 <div class="my-2 d-flex justify-content-between align-items-center">
                   <a href="#" class="auth-link text-black" id="forgat-pass">Forgot password?</a>
                 </div>
-                <div class="text-center mt-4 font-weight-light" id="dont-ac">Don't have an account?<a href="src/pages/samples/register.html" id="create-user" class="text-primary">Create</a>
+                <div class="text-center mt-4 font-weight-light" id="dont-ac">Don't have an account?<a
+                    href="src/pages/samples/register.html" id="create-user" class="text-primary">Create</a>
                 </div>
-                <div class="text-center mt-4 font-weight-light" id="admin-login">Admin Login<a href="src/pages/samples/admin_login.html" id="ad-login" class="text-primary">Login</a>
+                <div class="text-center mt-4 font-weight-light" id="admin-login">Admin Login<a
+                    href="src/pages/samples/admin_login.html" id="ad-login" class="text-primary">Login</a>
                 </div>
               </form>
             </div>
