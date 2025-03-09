@@ -83,7 +83,7 @@
         }
 
         function api() {
-                    axios.get("http://localhost:3000/Sdata")
+            axios.get("http://localhost:3000/Sdata")
                 .then(responce => {
                     let l = responce.data.data;
 
@@ -340,8 +340,41 @@
                 });
 
 
+                // function addEvent() {
+                //     let newEventCount = localStorage.getItem('newEventCount');
+                //     let title = document.getElementById("title").value;
+                //     let date = document.getElementById('date').value;
+                //     let hour = document.getElementById("hour").value;
+                //     let minute = document.getElementById("minute").value;
+                //     let ampm = document.getElementById("ampm").value;
+                //     let time;
+
+                //     if (hour && minute && ampm) {
+                //         time = (`${hour}:${minute} ${ampm}`);
+                //     }
+
+                //     if (title === "" || date === "" || hour == '' || minute == '' || ampm == '') {
+                //         alert("Please enter both title and description.");
+                //         return;
+                //     }
+
+                //     axios.post("http://localhost:3000/insertEvent", {
+                //         "event_title": title,
+                //         "event_date": date,
+                //         "event_time": time
+                //     })
+                //         .then(responce => {
+                //             alert(responce.data.message)
+                //         })
+                //     // Show success message
+                //     // document.getElementById("statusMessage").innerText = "Event added successfully!";
+                //     document.getElementById("date").value = "";
+                //     document.getElementById("title").value = "";
+                //     document.getElementById("hour").value = "";
+                //     document.getElementById("minute").value = "";
+                //     document.getElementById("ampm").value = "";
+                // }
                 function addEvent() {
-                    let newEventCount = localStorage.getItem('newEventCount');
                     let title = document.getElementById("title").value;
                     let date = document.getElementById('date').value;
                     let hour = document.getElementById("hour").value;
@@ -350,11 +383,16 @@
                     let time;
 
                     if (hour && minute && ampm) {
-                        time = (`${hour}:${minute} ${ampm}`);
+                        time = `${hour}:${minute} ${ampm}`;
                     }
 
-                    if (title === "" || date === "" || hour == '' || minute == '' || ampm == '') {
-                        alert("Please enter both title and description.");
+                    if (title === "" || date === "" || hour === '' || minute === '' || ampm === '') {
+                        Swal.fire({
+                            title: "Missing Information",
+                            text: "Please enter both title and description.",
+                            icon: "warning",
+                            confirmButtonText: "OK"
+                        });
                         return;
                     }
 
@@ -363,17 +401,31 @@
                         "event_date": date,
                         "event_time": time
                     })
-                        .then(responce => {
-                            alert(responce.data.message)
+                        .then(response => {
+                            Swal.fire({
+                                title: "Success!",
+                                text: response.data.message,
+                                icon: "success",
+                                confirmButtonText: "OK"
+                            });
+
+                            // Clear input fields after success
+                            document.getElementById("date").value = "";
+                            document.getElementById("title").value = "";
+                            document.getElementById("hour").value = "";
+                            document.getElementById("minute").value = "";
+                            document.getElementById("ampm").value = "";
                         })
-                    // Show success message
-                    // document.getElementById("statusMessage").innerText = "Event added successfully!";
-                    document.getElementById("date").value = "";
-                    document.getElementById("title").value = "";
-                    document.getElementById("hour").value = "";
-                    document.getElementById("minute").value = "";
-                    document.getElementById("ampm").value = "";
+                        .catch(error => {
+                            Swal.fire({
+                                title: "Error",
+                                text: "Something went wrong! Please try again.",
+                                icon: "error",
+                                confirmButtonText: "OK"
+                            });
+                        });
                 }
+
 
             </script>
 

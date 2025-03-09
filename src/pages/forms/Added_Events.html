@@ -54,33 +54,6 @@
             });
         }
 
-        function Lock(id) {
-            const rs = confirm("Do you wnat to change the teacher Status Code?")
-
-            if (rs) {
-                axios.put('http://localhost:3000/addLockStutas', {
-                    "sid": id
-                })
-                    .then(responce => {
-                        alert(responce.data.message)
-                        window.location.href = 'admin_staff_member.html'
-                    })
-            }
-        }
-
-        function Unlock(id) {
-            const rs = confirm("Do you wnat to change the teacher Status Code?")
-
-            if (rs) {
-                axios.put('http://localhost:3000/addUnlockStutas', {
-                    "sid": id
-                })
-                    .then(responce => {
-                        alert(responce.data.message)
-                        window.location.href = 'admin_staff_member.html'
-                    })
-            }
-        }
         function setCount() {
                 localStorage.setItem('newEventCount', 0);
         }
@@ -106,35 +79,6 @@
 
                     }
                 })
-        }
-
-        function Edit(id) {
-            const rs = confirm('Do you wnat edit the record?')
-
-            if (rs) {
-                window.location.href = 'admin_edit.html'
-            } else {
-                return 0
-            }
-
-        }
-
-        function Delete(id) {
-            // alert(id)
-            const rs = confirm('Are you sure to delete the this record?');
-            if (rs) {
-                // alert(id)
-                axios.delete('http://localhost:3000/delStaff', {
-                    data: { "id": id }
-                })
-                    .then(responce => {
-                        alert(responce.data.message)
-                        window.location.href = 'admin_staff_member.html'
-                    })
-
-            } else {
-                return 0
-            }
         }
 
     </script>
