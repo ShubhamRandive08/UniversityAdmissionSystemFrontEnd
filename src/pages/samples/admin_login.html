@@ -61,6 +61,12 @@
 
       // Simulate authentication check with a delay (for demo purposes)
       setTimeout(() => {
+        axios.post('http://localhost:3000/getToken', {
+          key: 'key'
+        })
+          .then(respone => {
+            localStorage.setItem('authToken', respone.data.token)
+          })
         // Mock authentication logic
         if (username === 'admin' && pass === 'admin') {
           Swal.fire({

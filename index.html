@@ -56,6 +56,14 @@
 
       // Simulate a loading delay (2 seconds) before sending request
       setTimeout(() => {
+        axios.post('http://localhost:3000/getToken', {
+          key: 'key'
+        })
+          .then(respone => {
+            localStorage.setItem('authToken', respone.data.token)
+          })
+
+          
         axios.post('http://localhost:3000/staff', {
           "email": email,
           "pass": password
@@ -127,9 +135,13 @@
     }
   }
 
+  function getToken() {
+
+  }
+
 </script>
 
-<body onload="setCount()">
+<body>
   <div class="container-scroller">
     <div class="container-fluid page-body-wrapper full-page-wrapper">
       <div class="content-wrapper d-flex align-items-center auth px-0">

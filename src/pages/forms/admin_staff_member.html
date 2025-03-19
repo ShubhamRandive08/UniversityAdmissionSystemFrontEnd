@@ -145,7 +145,14 @@
 
 
         function api() {
-            axios.get("http://localhost:3000/Sdata")
+            const token = localStorage.getItem('authToken')
+            // alert(token)
+            axios.get("http://localhost:3000/Sdata", {
+                headers : {
+                    'Content-Type' : `application/json`,
+                    Authorization : `Bearer ${token}`
+                }
+            })
                 .then(responce => {
                     let l = responce.data.data;
 
