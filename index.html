@@ -56,7 +56,7 @@
 
       // Simulate a loading delay (2 seconds) before sending request
       setTimeout(() => {
-        axios.post('http://localhost:3000/getToken', {
+        axios.post('http://localhost:3000/api/auth/getToken', {
           key: 'key'
         })
           .then(respone => {
