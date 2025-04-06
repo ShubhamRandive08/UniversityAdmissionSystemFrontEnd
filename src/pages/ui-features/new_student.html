@@ -102,64 +102,69 @@
                 },
               });
             } else {
-              axios.post('http://localhost:3000/insertStudent', {
-                "fname": document.getElementById('fname').value,
-                "mname": document.getElementById('mname').value,
-                "lname": document.getElementById('lname').value,
-                "gender": document.getElementById('gender').value,
-                "dob": document.getElementById('dob').value,
-                "twelvem": document.getElementById('twelveth').value,
-                "tenm": document.getElementById('tenth').value,
-                "add": document.getElementById('add').value,
-                "state": document.getElementById('state').value,
-                "mb": document.getElementById('mb').value,
-                "city": document.getElementById('city').value,
-                "fee": document.getElementById('fee').value,
-                "addharno": document.getElementById('aadharno').value,
-                "tid": localStorage.getItem('tid'),
-                "tname": localStorage.getItem('tname'),
-                "pcode": document.getElementById('pcode').value,
-                "date": formattedDate
-              })
-                .then(responce => {
-                  Swal.fire({
-                    icon: 'success',  // Success icon (green check)
-                    title: 'Student Admission Conformed!',
-                    timer: 3000,  // Display for 3 seconds
-                    background: 'rgba(0, 0, 0, 0.5)',  // Glassmorphism effect
-                    backdrop: 'rgba(0, 0, 0, 0.8)',  // Semi-transparent background
-                    color: '#fff',  // Text color
-                    showConfirmButton: false,  // Hide confirm button
-                    position: 'center',  // Centered position
-                    toast: false,  // Not as toast (fixed popup)
-                    showClass: {
-                      popup: 'animate__animated animate__fadeInDown',  // Animation for popup
-                    },
-                    hideClass: {
-                      popup: 'animate__animated animate__fadeOutUp',  // Animation for hiding
-                    },
-                  });
-                  document.getElementById('fname').value = '';
-                  document.getElementById('mname').value = '';
-                  document.getElementById('lname').value = '';
-                  document.getElementById('gender').value = '';
-                  document.getElementById('dob').value = '';
-                  document.getElementById('twelveth').value = '';
-                  document.getElementById('tenth').value = '';
-                  document.getElementById('add').value = '';
-                  document.getElementById('state').value = '';
-                  document.getElementById('mb').value = '';
-                  document.getElementById('city').value = '';
-                  document.getElementById('fee').value = '';
-                  document.getElementById('aadharno').value = '';
-                  document.getElementById('tid').value = '';
-                  document.getElementById('tname').value = '';
-                  document.getElementById('pcode').value = '';
-
-
+              if (parseInt(document.getElementById('fee').value) >= 5000) {
+                axios.post('http://localhost:3000/insertStudent', {
+                  "fname": document.getElementById('fname').value,
+                  "mname": document.getElementById('mname').value,
+                  "lname": document.getElementById('lname').value,
+                  "gender": document.getElementById('gender').value,
+                  "dob": document.getElementById('dob').value,
+                  "twelvem": document.getElementById('twelveth').value,
+                  "tenm": document.getElementById('tenth').value,
+                  "add": document.getElementById('add').value,
+                  "state": document.getElementById('state').value,
+                  "mb": document.getElementById('mb').value,
+                  "city": document.getElementById('city').value,
+                  "fee": document.getElementById('fee').value,
+                  "addharno": document.getElementById('aadharno').value,
+                  "tid": localStorage.getItem('tid'),
+                  "tname": localStorage.getItem('tname'),
+                  "pcode": document.getElementById('pcode').value,
+                  "date": formattedDate
                 })
+                  .then(responce => {
+                    Swal.fire({
+                      icon: 'success',  // Success icon (green check)
+                      title: 'Student Admission Conformed!',
+                      timer: 3000,  // Display for 3 seconds
+                      background: 'rgba(0, 0, 0, 0.5)',  // Glassmorphism effect
+                      backdrop: 'rgba(0, 0, 0, 0.8)',  // Semi-transparent background
+                      color: '#fff',  // Text color
+                      showConfirmButton: false,  // Hide confirm button
+                      position: 'center',  // Centered position
+                      toast: false,  // Not as toast (fixed popup)
+                      showClass: {
+                        popup: 'animate__animated animate__fadeInDown',  // Animation for popup
+                      },
+                      hideClass: {
+                        popup: 'animate__animated animate__fadeOutUp',  // Animation for hiding
+                      },
+                    });
+                    document.getElementById('fname').value = '';
+                    document.getElementById('mname').value = '';
+                    document.getElementById('lname').value = '';
+                    document.getElementById('gender').value = '';
+                    document.getElementById('dob').value = '';
+                    document.getElementById('twelveth').value = '';
+                    document.getElementById('tenth').value = '';
+                    document.getElementById('add').value = '';
+                    document.getElementById('state').value = '';
+                    document.getElementById('mb').value = '';
+                    document.getElementById('city').value = '';
+                    document.getElementById('fee').value = '';
+                    document.getElementById('aadharno').value = '';
+                    document.getElementById('tid').value = '';
+                    document.getElementById('tname').value = '';
+                    document.getElementById('pcode').value = '';
+                  })
+              } else {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error!',
+                  text: 'Please Fill fees above 5000',
+                });
+              }
             }
-
           }
         })
     }
