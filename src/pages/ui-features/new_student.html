@@ -170,6 +170,12 @@
     }
 
   </script>
+
+  <style>
+    #course::placeholder{
+      color: black;
+    }
+  </style>
 </head>
 
 <body onload="api()">
@@ -416,6 +422,15 @@
                           <label class="col-sm-3 col-form-label">Filling Fees<sup style="color: red;">*</sup></label>
                           <div class="col-sm-9">
                             <input type="number" class="form-control" id="fee" placeholder="Fees" required />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Course<sup style="color: red;">*</sup></label>
+                          <div class="col-sm-9">
+                            <input type="number" class="form-control" id="course"
+                              placeholder="Bachaler Of Computer Application" disabled/>
                           </div>
                         </div>
                       </div>
