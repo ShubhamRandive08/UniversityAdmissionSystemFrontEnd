@@ -172,7 +172,7 @@
   </script>
 
   <style>
-    #course::placeholder{
+    #course::placeholder, #cast::placeholder{
       color: black;
     }
   </style>
@@ -373,7 +373,7 @@
                     </div>
 
                     <div class="row">
-                      <div class="col-md-6">
+                      <div class="col-md-4">
                         <div class="form-group row">
                           <label class="col-sm-3 col-form-label">Address<sup style="color: red;">*</sup></label>
                           <div class="col-sm-9">
@@ -381,7 +381,21 @@
                           </div>
                         </div>
                       </div>
-                      <div class="col-md-6">
+                      <div class="col-md-4">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label" for="cast">Cast<sup style="color: red;">*</sup></label>
+                          <div class="col-sm-9">
+                            <select name="cast" class="form-control" id="cast" required>
+                              <option value="Select">Select Your Cast</option>
+                              <option value="Select">Open</option>
+                              <option value="Select">OBC</option>
+                              <option value="Select">SC</option>
+                              <option value="Select">NT</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
                         <div class="form-group row">
                           <label class="col-sm-3 col-form-label">State<sup style="color: red;">*</sup></label>
                           <div class="col-sm-9">
