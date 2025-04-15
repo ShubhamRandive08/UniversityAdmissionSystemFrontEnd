@@ -29,75 +29,187 @@
     localStorage.setItem('newEventCount', 0);
     }
   }
+  // function signup() {
+  //   let username = document.getElementById('username').value;
+  //   let pass = document.getElementById('password').value;
+
+  //   // Basic validation for empty fields
+  //   if (username == '' || pass == '') {
+  //     Swal.fire({
+  //       title: 'Oops!',
+  //       text: 'Please fill in both username and password.',
+  //       icon: 'warning',
+  //       confirmButtonText: 'OK',
+  //       background: '#f8d7da', // light red background
+  //       customClass: {
+  //         popup: 'animated shake', // Shake animation when fields are empty
+  //       }
+  //     });
+  //   } else {
+  //     // Show loading state while simulating authentication
+  //     Swal.fire({
+  //       title: 'Authenticating...',
+  //       text: 'Please wait a moment.',
+  //       icon: 'info',
+  //       showConfirmButton: false,
+  //       allowOutsideClick: false, // Disable outside click to prevent closing
+  //       background: '#f8f9fa',
+  //       didOpen: () => {
+  //         Swal.showLoading();
+  //       }
+  //     });
+
+  //     // Simulate authentication check with a delay (for demo purposes)
+  //     setTimeout(() => {
+  //       axios.post('http://localhost:3000/getToken', {
+  //         key: 'key'
+  //       })
+  //         .then(respone => {
+  //           localStorage.setItem('authToken', respone.data.token)
+  //         })
+  //       // Mock authentication logic
+  //       if (username === 'admin' && pass === 'admin') {
+  //         Swal.fire({
+  //           title: 'Login Success',
+  //           text: 'Welcome back, admin!',
+  //           icon: 'success',
+  //           confirmButtonText: 'Proceed',
+  //           background: '#d4edda', // light green background for success
+  //           customClass: {
+  //             popup: 'animated zoomIn', // Zoom in effect on success
+  //           }
+  //         }).then((result) => {
+  //           if (result.isConfirmed) {
+  //             window.location.href = '../../../src/index_admin.html'; // Redirect after success
+  //           }
+  //         });
+  //       } else {
+  //         Swal.fire({
+  //           title: 'Login Failed',
+  //           text: 'Username or password is incorrect.',
+  //           icon: 'error',
+  //           confirmButtonText: 'Try Again',
+  //           background: '#f8d7da', // light red background for error
+  //           customClass: {
+  //             popup: 'animated shake', // Shake animation for failed login
+  //           }
+  //         });
+  //       }
+  //     }, 2000); // Simulate a delay for authentication process (e.g., API call)
+  //   }
+  // }
+
   function signup() {
-    let username = document.getElementById('username').value;
-    let pass = document.getElementById('password').value;
+  let username = document.getElementById('username').value;
+  let pass = document.getElementById('password').value;
 
-    // Basic validation for empty fields
-    if (username == '' || pass == '') {
-      Swal.fire({
-        title: 'Oops!',
-        text: 'Please fill in both username and password.',
-        icon: 'warning',
-        confirmButtonText: 'OK',
-        background: '#f8d7da', // light red background
-        customClass: {
-          popup: 'animated shake', // Shake animation when fields are empty
-        }
-      });
-    } else {
-      // Show loading state while simulating authentication
-      Swal.fire({
-        title: 'Authenticating...',
-        text: 'Please wait a moment.',
-        icon: 'info',
-        showConfirmButton: false,
-        allowOutsideClick: false, // Disable outside click to prevent closing
-        background: '#f8f9fa',
-        didOpen: () => {
-          Swal.showLoading();
-        }
+  if (username === '' || pass === '') {
+    Swal.fire({
+      title: 'Oops!',
+      text: 'Please fill in both username and password.',
+      icon: 'warning',
+      confirmButtonText: 'OK',
+      background: '#f8d7da',
+      customClass: {
+        popup: 'animated shake',
+      }
+    });
+  } else {
+    Swal.fire({
+      title: 'Authenticating...',
+      text: 'Please wait a moment.',
+      icon: 'info',
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      background: '#f8f9fa',
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    setTimeout(() => {
+      axios.post('http://localhost:3000/getToken', {
+        key: 'key'
+      }).then(response => {
+        localStorage.setItem('authToken', response.data.token);
+      }).catch(error => {
+        console.error("Token fetch failed:", error);
       });
 
-      // Simulate authentication check with a delay (for demo purposes)
-      setTimeout(() => {
-        axios.post('http://localhost:3000/getToken', {
-          key: 'key'
-        })
-          .then(respone => {
-            localStorage.setItem('authToken', respone.data.token)
-          })
-        // Mock authentication logic
-        if (username === 'admin' && pass === 'admin') {
-          Swal.fire({
-            title: 'Login Success',
-            text: 'Welcome back, admin!',
-            icon: 'success',
-            confirmButtonText: 'Proceed',
-            background: '#d4edda', // light green background for success
-            customClass: {
-              popup: 'animated zoomIn', // Zoom in effect on success
+      if (username === 'admin' && pass === 'admin') {
+        Swal.close();
+
+        // Create colorful welcome animation screen
+        const welcomeDiv = document.createElement('div');
+        welcomeDiv.id = "adminWelcomeScreen";
+        welcomeDiv.innerHTML = `<h1 class="drill-text">WELCOME ADMIN</h1>`;
+        document.body.appendChild(welcomeDiv);
+
+        // Inject colorful animation styles
+        const style = document.createElement('style');
+        style.innerHTML = `
+          #adminWelcomeScreen {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, #1e1e2f, #2c3e50);
+            display: flex;
+            justify-content: center;
+            align-items: start;
+            padding-top: 15%;
+            z-index: 9999;
+          }
+
+          .drill-text {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 4rem;
+            background: linear-gradient(90deg, #ff6ec4, #7873f5, #4ade80);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: drillDownFade 1s ease-out forwards;
+            text-shadow: 0 0 30px rgba(255,255,255,0.2);
+            opacity: 0;
+          }
+
+          @keyframes drillDownFade {
+            0% {
+              transform: translateY(-120px);
+              opacity: 0;
             }
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.href = '../../../src/index_admin.html'; // Redirect after success
+            50% {
+              transform: translateY(20px);
+              opacity: 1;
             }
-          });
-        } else {
-          Swal.fire({
-            title: 'Login Failed',
-            text: 'Username or password is incorrect.',
-            icon: 'error',
-            confirmButtonText: 'Try Again',
-            background: '#f8d7da', // light red background for error
-            customClass: {
-              popup: 'animated shake', // Shake animation for failed login
+            100% {
+              transform: translateY(0);
+              opacity: 1;
             }
-          });
-        }
-      }, 2000); // Simulate a delay for authentication process (e.g., API call)
-    }
+          }
+        `;
+        document.head.appendChild(style);
+
+        // Hold the animation a bit longer before redirect (5 seconds)
+        setTimeout(() => {
+          window.location.href = '../../../src/index_admin.html';
+        }, 3000);
+
+      } else {
+        Swal.fire({
+          title: 'Login Failed',
+          text: 'Username or password is incorrect.',
+          icon: 'error',
+          confirmButtonText: 'Try Again',
+          background: '#f8d7da',
+          customClass: {
+            popup: 'animated shake',
+          }
+        });
+      }
+    }, 2000);
   }
+}
+
+
+
 </script>
 
 <body onload="setCount()">
