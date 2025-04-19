@@ -231,130 +231,191 @@
         }
 
         function searchData() {
+    let searchBox = document.getElementById('dataSearch');
 
-            let searchBox = document.getElementById('dataSearch')
+    searchBox.addEventListener('input', function () {
+        const searchTerm = searchBox.value.trim().toLowerCase();
 
-            searchBox.addEventListener('input', function () {
-                const searchTerm = searchBox.value.trim().toLowerCase(); // Get the search term, trim, and convert to lowercase
+        // Cell styling function for inset shadows
+        const getCellStyle = (status) => {
+            if (status === 'Pending') {
+                return "background-color: #fff9e6; box-shadow: inset 0 0 8px rgba(255, 223, 80, 0);";
+            } else if (status === 'Rejected') {
+                return "background-color: #ffeaea; box-shadow: inset 0 0 8px rgba(255, 80, 80, 0);";
+            } else if (status === 'Success') {
+                return "background-color: #eaffea; box-shadow: inset 0 0 8px rgba(80, 255, 110, 0);";
+            }
+            return "";
+        };
 
-                if (searchBox.value == '') {
-                    $('#dt').empty()
-                    // alert("Test")
-                    axios.get("http://localhost:3000/studData")
-                        .then(responce => {
-                            let l = responce.data.studData;
-                            for (let i = 0; i < l.length; i++) {
-                                var rowData = "<tr><td>" + l[i].id + "</td>";
-                                rowData += "<td  id='name'>" + l[i].fname + "</td>";
-                                rowData += "<td>" + l[i].mname + "</td>";
-                                rowData += "<td>" + l[i].lname + "</td>";
-                                rowData += "<td>" + l[i].gender + "</td>";
-                                rowData += "<td>" + l[i].twelvem + "</td>";
-                                rowData += "<td>" + l[i].tenm + "</td>";
-                                rowData += "<td>" + l[i].address + "</td>";
-                                rowData += "<td>" + l[i].state + "</td>";
-                                rowData += "<td>" + l[i].fillfees + "</td>";
-                                rowData += "<td>" + l[i].addharno + "</td>";
-                                rowData += "<td>" + l[i].date + "</td>";
-                                rowData += "<td>" + l[i].tid + "</td>";
-                                rowData += "<td>" + l[i].tname + "</td>";
-                                $('#dt').append(rowData);
-                            }
-                        })
+        const renderRows = (list) => {
+            $('#dt').empty();
+            list.forEach(student => {
+                const cellStyle = getCellStyle(student.status);
+                let rowData = `<tr>`;
+                rowData += `<td style="${cellStyle}">${student.id}</td>`;
+                rowData += `<td style="${cellStyle}">${student.fname}</td>`;
+                rowData += `<td style="${cellStyle}">${student.mname}</td>`;
+                rowData += `<td style="${cellStyle}">${student.lname}</td>`;
+                rowData += `<td style="${cellStyle}">${student.gender}</td>`;
+                rowData += `<td style="${cellStyle}">${student.twelvem}</td>`;
+                rowData += `<td style="${cellStyle}">${student.tenm}</td>`;
+                rowData += `<td style="${cellStyle}">${student.address}</td>`;
+                rowData += `<td style="${cellStyle}">${student.state}</td>`;
+                rowData += `<td style="${cellStyle}">${student.fillfees}</td>`;
+                rowData += `<td style="${cellStyle}">${student.addharno}</td>`;
+                rowData += `<td style="${cellStyle}">${student.date}</td>`;
+                rowData += `<td style="${cellStyle}">${student.tid}</td>`;
+                rowData += `<td style="${cellStyle}">${student.tname}</td>`;
 
+                if (student.status === 'Pending') {
+                    rowData += `<td><input type='button' style='padding:.7rem .8rem;' value='Review' onclick='reviewAdmission(${student.id})' class='btn btn-warning editbtn'></td>`;
+                } else if (student.status === 'Rejected') {
+                    rowData += `<td><input type='button' style='padding:.7rem .8rem;' value='Rejected' class='btn  editbtn'></td>`;
                 } else {
-                    $('#dt').empty();
-
-                    axios.get("http://localhost:3000/studData")
-                        .then(response => {
-                            let l = response.data.studData;
-                            const students = response.data.studData;
-                            const results = students.filter(student =>
-                                student.fname.toLowerCase().includes(searchTerm)
-                            );
-                            if (results.length > 0) {
-                                for (let i = 0; i < results.length; i++) {
-                                    var rowData = "<tr><td>" + results[i].id + "</td>";
-                                    rowData += "<td id='name'>" + results[i].fname + "</td>";
-                                    rowData += "<td>" + results[i].mname + "</td>";
-                                    rowData += "<td>" + results[i].lname + "</td>";
-                                    rowData += "<td>" + results[i].gender + "</td>";
-                                    rowData += "<td>" + results[i].twelvem + "</td>";
-                                    rowData += "<td>" + results[i].tenm + "</td>";
-                                    rowData += "<td>" + results[i].address + "</td>";
-                                    rowData += "<td>" + results[i].state + "</td>";
-                                    rowData += "<td>" + results[i].fillfees + "</td>";
-                                    rowData += "<td>" + results[i].addharno + "</td>";
-                                    rowData += "<td>" + results[i].date + "</td>";
-                                    rowData += "<td>" + results[i].tid + "</td>";
-                                    rowData += "<td>" + results[i].tname + "</td>";
-                                    $('#dt').append(rowData);
-                                }
-                            }
-                        });
+                    rowData += `<td><input type='button' style='padding:.7rem .8rem;' value='Success' class='btn  editbtn'></td>`;
                 }
-            })
-        }
+
+                rowData += `</tr>`;
+                $('#dt').append(rowData);
+            });
+        };
+
+        axios.get("http://localhost:3000/studData")
+            .then(response => {
+                const students = response.data.studData;
+                if (!searchTerm) {
+                    renderRows(students);
+                } else {
+                    const filtered = students.filter(student =>
+                        student.fname.toLowerCase().includes(searchTerm)
+                    );
+                    renderRows(filtered);
+                }
+            });
+    });
+}
+
 
         function api() {
-            document.getElementById("todaydate").textContent = formattedDate;
+    document.getElementById("todaydate").textContent = formattedDate;
 
-            // API call for the getting the total  fees
-            axios.get('http://localhost:3000/totolfees')
-                .then(responce => {
-                    document.getElementById('ttlFees').innerHTML = (responce.data.ttl[0].total)
-                })
+    // Total Fees
+    axios.get('http://localhost:3000/totolfees')
+        .then(responce => {
+            document.getElementById('ttlFees').innerHTML = responce.data.ttl[0].total;
+        });
 
-            // API call for the getting the total submitted fees
-            axios.get('http://localhost:3000/totolcollectivefees')
-                .then(responce => {
-                    document.getElementById('submitedFees').innerHTML = (responce.data.total[0].totalcollectivefee)
-                })
+    // Submitted Fees
+    axios.get('http://localhost:3000/totolcollectivefees')
+        .then(responce => {
+            document.getElementById('submitedFees').innerHTML = responce.data.total[0].totalcollectivefee;
+        });
 
-            // API call for the count the total student
-            axios.get('http://localhost:3000/studCount')
-                .then(responce => {
-                    document.getElementById('ttlStud').innerHTML = (responce.data.coutn[0].ttlstudent)
-                })
+    // Total Students
+    axios.get('http://localhost:3000/studCount')
+        .then(responce => {
+            document.getElementById('ttlStud').innerHTML = responce.data.coutn[0].ttlstudent;
+        });
 
-            // API call for the count the total empty slot
-            axios.get('http://localhost:3000/emptySlot')
-                .then(responce => {
-                    document.getElementById('emptySlot').innerHTML = responce.data.emptySlot[0].emptyslot
-                })
+    // Empty Slots
+    axios.get('http://localhost:3000/emptySlot')
+        .then(responce => {
+            document.getElementById('emptySlot').innerHTML = responce.data.emptySlot[0].emptyslot;
+        });
 
-
-
-            axios.get("http://localhost:3000/studData")
-                .then(responce => {
-                    let l = responce.data.studData;
-
-                    for (let i = 0; i < l.length; i++) {
-
-                        var rowData = "<tr><td>" + l[i].id + "</td>";
-                        rowData += "<td id='name'>" + l[i].fname + "</td>";
-                        rowData += "<td>" + l[i].mname + "</td>";
-                        rowData += "<td>" + l[i].lname + "</td>";
-                        rowData += "<td>" + l[i].gender + "</td>";
-                        rowData += "<td>" + l[i].twelvem + "</td>";
-                        rowData += "<td>" + l[i].tenm + "</td>";
-                        rowData += "<td>" + l[i].address + "</td>";
-                        rowData += "<td>" + l[i].state + "</td>";
-                        rowData += "<td>" + l[i].fillfees + "</td>";
-                        rowData += "<td>" + l[i].addharno + "</td>";
-                        rowData += "<td>" + l[i].date + "</td>";
-                        rowData += "<td>" + l[i].tid + "</td>";
-                        rowData += "<td>" + l[i].tname + "</td>";
-                        rowData += "</tr>";
-                        $('#dt').append(rowData);
-                    }
-                })
+    // Cell style based on status (for working inset shadow)
+    const getCellStyle = (status) => {
+        if (status === 'Pending') {
+            return "background-color: #fff9e6; box-shadow: inset 0 0 10rem rgba(255, 223, 80, 0);";
+        } else if (status === 'Rejected') {
+            return "background-color: #ffeaea; box-shadow: inset 0 0 10rem rgba(255, 80, 80, 0);";
+        } else if (status === 'Success') {
+            return "background-color: #eaffea; box-shadow: inset 0 0 10rem rgba(80, 255, 110, 0);";
         }
+        return "";
+    };
+
+    // Fetch and display student data
+    axios.get("http://localhost:3000/studData")
+        .then(responce => {
+            const students = responce.data.studData;
+            $('#dt').empty();
+
+            for (let i = 0; i < students.length; i++) {
+                const student = students[i];
+                const cellStyle = getCellStyle(student.status);
+
+                let rowData = `<tr>`;
+                rowData += `<td style="${cellStyle}">${student.id}</td>`;
+                rowData += `<td style="${cellStyle}">${student.fname}</td>`;
+                rowData += `<td style="${cellStyle}">${student.mname}</td>`;
+                rowData += `<td style="${cellStyle}">${student.lname}</td>`;
+                rowData += `<td style="${cellStyle}">${student.gender}</td>`;
+                rowData += `<td style="${cellStyle}">${student.twelvem}</td>`;
+                rowData += `<td style="${cellStyle}">${student.tenm}</td>`;
+                rowData += `<td style="${cellStyle}">${student.address}</td>`;
+                rowData += `<td style="${cellStyle}">${student.state}</td>`;
+                rowData += `<td style="${cellStyle}">${student.fillfees}</td>`;
+                rowData += `<td style="${cellStyle}">${student.addharno}</td>`;
+                rowData += `<td style="${cellStyle}">${student.date}</td>`;
+                rowData += `<td style="${cellStyle}">${student.tid}</td>`;
+                rowData += `<td style="${cellStyle}">${student.tname}</td>`;
+
+                if (student.status === 'Pending') {
+                    rowData += `<td><input type='button' style='padding:.7rem .8rem;' value='Review' onclick='reviewAdmission(${student.id})' class='btn btn-warning editbtn'></td>`;
+                } else if (student.status === 'Rejected') {
+                    rowData += `<td><input type='button' style='padding:.7rem .8rem;' value='Rejected' class='btn editbtn'></td>`;
+                } else {
+                    rowData += `<td><input type='button' style='padding:.7rem .8rem;' value='Success' class='btn  editbtn'></td>`;
+                }
+
+                rowData += `</tr>`;
+                $('#dt').append(rowData);
+            }
+        });
+}
+
+
+
 
         function edit(id) {
             localStorage.setItem('studentId', id)
             window.location.href = "pages/forms/edit.html"
         }
+
+        function reviewAdmission(studentId) {
+            Swal.fire({
+                title: 'Admission Status',
+                text: 'Do you want to approve or reject this admission?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Success',
+                cancelButtonText: 'Reject',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    updateAdmissionStatus(studentId, 'Success');
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    updateAdmissionStatus(studentId, 'Rejected');
+                }
+            });
+        }
+
+        function updateAdmissionStatus(studentId, status) {
+            axios.put('http://localhost:3000/updateAdmissionStatus', {
+                id: studentId,
+                status: status
+            }).then(responce => {
+                Swal.fire({
+                    title: 'Admission Status Marked',
+                    icon: 'question',
+                })
+                window.location.reload()
+            })
+        }
+
+
 
     </script>
 </head>
@@ -584,26 +645,11 @@
                                                     <th>Date</th>
                                                     <th>Teacher ID</th>
                                                     <th>Teacher Name</th>
-
+                                                    <th>Admission</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="dt" style="text-align: center;">
-                                                <tr>
-                                                    <td>ID</td>
-                                                    <td>First Name</td>
-                                                    <td>Middle Name</td>
-                                                    <td>Last Name</td>
-                                                    <td>Gender</td>
-                                                    <td>12<sup>td</sup> Marks</td>
-                                                    <td>10<sup>td</sup> Marks</td>
-                                                    <td>Address</td>
-                                                    <td>State</td>
-                                                    <td>Fill Fees</td>
-                                                    <td>Addhar Number</td>
-                                                    <td>Date</td>
-                                                    <td>Teacher ID</td>
-                                                    <td>Teacher Name</td>
-                                                </tr>
+                                                
                                             </tbody>
                                         </table>
                                     </div>

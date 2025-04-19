@@ -215,6 +215,15 @@
               rowData += "<td>" + l[i].tname + "</td>";
               rowData += "<td><input  type='button' style='padding : .7rem .8rem;' value='Edit' onclick = 'openUpdateForm(" + l[i].id + ")' class='btn btn-success editbtn'></td>";
               rowData += "<td><input type='button' style='padding : .7rem .8rem;' value='Delete' class='btn btn-danger' onclick='del(" + l[i].id + ")'></td>";
+
+
+              if (l[i].status == 'Pending')
+                rowData += "<td>" + l[i].status + "</td>";
+              else
+                rowData += "<td>" + l[i].status + "</td>";
+
+              rowData += "<td><input  type='button' style='padding : .7rem .8rem;' value='Track Application' onclick = 'showHistory(" + l[i].id + ")' class='btn btn-info editbtn'></td>";
+
               rowData += "</tr>";
               $('#dt').append(rowData);
             }
@@ -252,6 +261,13 @@
                   rowData += "<td>" + l[i].tname + "</td>";
                   rowData += "<td><input  type='button' style='padding : .7rem .8rem;' value='Edit' onclick = 'edit(" + l[i].id + ")' class='btn btn-success editbtn'></td>";
                   rowData += "<td><input type='button' style='padding : .7rem .8rem;' value='Delete' class='btn btn-danger' onclick='del(" + l[i].id + ")'></td>";
+                  if (l[i].status == 'Pending')
+                    rowData += "<td>" + l[i].status + "</td>";
+                  else
+                    rowData += "<td>" + l[i].status + "</td>";
+
+                  rowData += "<td><input  type='button' style='padding : .7rem .8rem;' value='Track Application' onclick = 'showHistory(" + l[i].id + ")' class='btn btn-info editbtn'></td>";
+
                   rowData += "</tr>";
                   $('#dt').append(rowData);
                 }
@@ -287,6 +303,12 @@
                   rowData += "<td>" + results[i].tname + "</td>";
                   rowData += "<td><input  type='button' style='padding : .7rem .8rem;' value='Edit' onclick = 'edit(" + results[i].id + ")' class='btn btn-success editbtn'></td>";
                   rowData += "<td><input type='button' style='padding : .7rem .8rem;' value='Delete' class='btn btn-danger' onclick='del(" + results[i].id + ")'></td>";
+                  if (l[i].status == 'Pending')
+                    rowData += "<td>" + l[i].status + "</td>";
+                  else
+                    rowData += "<td>" + l[i].status + "</td>";
+
+                  rowData += "<td><input  type='button' style='padding : .7rem .8rem;' value='Track Application' onclick = 'showHistory(" + l[i].id + ")' class='btn btn-info editbtn'></td>";
                   rowData += "</tr>";
                   $('#dt').append(rowData);
                 }
@@ -347,6 +369,8 @@
               rowData += "<td>" + l[i].tname + "</td>";
               rowData += "<td><input  type='button' style='padding : .7rem .8rem;' value='Edit' onclick = 'edit(" + l[i].id + ")' class='btn btn-success editbtn'></td>";
               rowData += "<td><input type='button' style='padding : .7rem .8rem;' value='Delete' class='btn btn-danger'></td>";
+
+              rowData += "<td><input  type='button' style='padding : .7rem .8rem;' value='Track Application' onclick = 'showHistory(" + l[i].id + ")' class='btn btn-info editbtn'></td>";
               rowData += "</tr>";
               $('#dt').append(rowData);
             }
@@ -358,6 +382,144 @@
       localStorage.setItem('studentId', id)
       window.location.href = "pages/forms/edit.html"
     }
+
+
+
+    function showHistory(studentId) {
+      axios.post('http://localhost:3000/studDataOnId', { id: studentId })
+        .then(response => {
+          const data = response.data.data[0];
+          const status = data.status;
+          const reason = data.reason || "No reason provided.";
+
+          const steps = [
+            {
+              label: '🕒 Pending',
+              description: `Admission form submitted on ${data.date}`,
+              color: '#3498db',
+              show: true
+            },
+            {
+              label: '✅ Approved',
+              description: `Admission approved by admin on ${data.admin_aprov_date}`,
+              color: '#2ecc71',
+              show: status === 'Success'
+            },
+            {
+              label: '❌ Rejected',
+              description: `Admission rejected by admin on ${data.admin_aprov_date}`,
+              color: '#e74c3c',
+              show: status === 'Rejected',
+              reason: reason
+            }
+          ];
+
+          const activeSteps = steps.filter(s => s.show);
+
+          let html = `
+        <div id="historyWrapper" style="position: relative; padding-left: 30px; font-family: 'Segoe UI', sans-serif; font-size: 15px;">
+          <style>
+            @keyframes pulse {
+              0% { box-shadow: 0 0 0 rgba(0,0,0,0.2); transform: scale(1); }
+              50% { box-shadow: 0 0 12px rgba(0,0,0,0.4); transform: scale(1.2); }
+              100% { box-shadow: 0 0 0 rgba(0,0,0,0.2); transform: scale(1); }
+            }
+
+            @keyframes doorOpen {
+              0% { transform: perspective(600px) rotateY(90deg); opacity: 0; }
+              100% { transform: perspective(600px) rotateY(0deg); opacity: 1; }
+            }
+
+            .door-animate {
+              animation: doorOpen 1s ease forwards;
+              transform-origin: left center;
+              opacity: 0;
+            }
+          </style>
+          <div class="door-animate">
+      `;
+
+          activeSteps.forEach((step) => {
+            html += `
+          <div style="position: relative; margin-bottom: 40px;">
+            <div style="
+              position: absolute; 
+              left: -32px; 
+              top: 2px; 
+              width: 18px; 
+              height: 18px; 
+              background-color: ${step.color}; 
+              border-radius: 50%; 
+              box-shadow: 0 0 8px ${step.color};
+              animation: pulse 1.5s infinite;
+            "></div>
+            <div style="margin-left: 10px;">
+              <div style="font-weight: bold; color: ${step.color};">${step.label}</div>
+              <div style="font-size: 14px; margin-top: 5px;">${step.description}</div>
+            </div>
+          </div>
+        `;
+
+            if (step.label.includes('Rejected') && step.reason) {
+              html += `
+            <div style="
+              margin-left: 10px; 
+              margin-top: -30px; 
+              margin-bottom: 20px; 
+              background: #ffe6e6; 
+              border-left: 5px solid #e74c3c; 
+              padding: 10px 15px; 
+              border-radius: 8px;
+              box-shadow: 0 0 5px rgba(0,0,0,0.05);
+              font-size: 14px;
+              animation: fadeIn 1s ease-in;
+            ">
+              <strong>Reason:</strong> ${step.reason}
+            </div>
+          `;
+            }
+          });
+
+          html += `
+          </div>
+        </div>
+      `;
+
+          Swal.fire({
+            title: '📊 Admission History',
+            html: html,
+            icon: 'info',
+            showCloseButton: true,
+            showConfirmButton: false,
+            customClass: {
+              popup: 'swal2-animate'
+            },
+            width: 700,
+            background: '#ffffff',
+            backdrop: true,
+            showClass: {
+              popup: ''
+            },
+            hideClass: {
+              popup: 'animate__animated animate__fadeOutUp animate__faster'
+            }
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching admission status:', error);
+          Swal.fire('Error', 'Unable to fetch admission history.', 'error');
+        });
+    }
+
+
+
+
+    function formatDate(dateString) {
+      if (!dateString) return 'N/A';
+      const date = new Date(dateString);
+      return date.toLocaleString(); // Change format if needed
+    }
+
 
   </script>
 </head>
@@ -593,6 +755,8 @@
                           <th>Teacher Name</th>
                           <th>Edit</th>
                           <th>Delete</th>
+                          <th>Status</th>
+                          <th>Show History</th>
 
                         </tr>
                       </thead>
@@ -614,9 +778,8 @@
                           <td>Teacher Name</td>
                           <td>Edit</td>
                           <td>Delete</td>
-
-
-
+                          <td>Status</td>
+                          <td>Show History</td>
                         </tr>
                       </tbody>
                     </table>
