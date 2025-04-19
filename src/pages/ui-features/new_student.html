@@ -120,12 +120,13 @@
                   "tid": localStorage.getItem('tid'),
                   "tname": localStorage.getItem('tname'),
                   "pcode": document.getElementById('pcode').value,
-                  "date": formattedDate
+                  "date": formattedDate,
+                  "status" : 'Pending'
                 })
                   .then(responce => {
                     Swal.fire({
                       icon: 'success',  // Success icon (green check)
-                      title: 'Student Admission Conformed!',
+                      title: 'Student Admission Application Successed !',
                       timer: 3000,  // Display for 3 seconds
                       background: 'rgba(0, 0, 0, 0.5)',  // Glassmorphism effect
                       backdrop: 'rgba(0, 0, 0, 0.8)',  // Semi-transparent background

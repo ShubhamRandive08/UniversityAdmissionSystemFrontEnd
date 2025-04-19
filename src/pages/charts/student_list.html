@@ -20,7 +20,7 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
   <script>
@@ -118,6 +118,7 @@
             rowData += "<td>" + l[i].date + "</td>";
             rowData += "<td>" + l[i].tid + "</td>";
             rowData += "<td>" + l[i].tname + "</td>";
+            rowData += "<td>" + l[i].status + "</td>";
             rowData += "</tr>";
             $('#dt').append(rowData);
           }
@@ -152,6 +153,7 @@
                 rowData += "<td>" + l[i].date + "</td>";
                 rowData += "<td>" + l[i].tid + "</td>";
                 rowData += "<td>" + l[i].tname + "</td>";
+                rowData += "<td>" + l[i].status + "</td>";
                 $('#dt').append(rowData);
               }
             })
@@ -182,8 +184,9 @@
                   rowData += "<td>" + results[i].date + "</td>";
                   rowData += "<td>" + results[i].tid + "</td>";
                   rowData += "<td>" + results[i].tname + "</td>";
-                  rowData += "<td><input  type='button' style='padding : .7rem .8rem;' value='Edit' onclick = 'edit(" + results[i].id + ")' class='btn btn-success editbtn'></td>";
-                  rowData += "<td><input type='button' style='padding : .7rem .8rem;' value='Delete' class='btn btn-danger' onclick='del(" + results[i].id + ")'></td>";
+                  rowData += "<td>" + results[i].status + "</td>";
+
+
                   rowData += "</tr>";
                   $('#dt').append(rowData);
                 }
@@ -345,6 +348,7 @@
                           <th>Date</th>
                           <th>Teacher ID</th>
                           <th>Teacher Name</th>
+                          <th>Admission Status</th>
                         </tr>
                       </thead>
                       <tbody id="dt" style="text-align: center;">
