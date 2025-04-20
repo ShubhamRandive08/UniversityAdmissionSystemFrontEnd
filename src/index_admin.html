@@ -231,150 +231,150 @@
         }
 
         function searchData() {
-    let searchBox = document.getElementById('dataSearch');
+            let searchBox = document.getElementById('dataSearch');
 
-    searchBox.addEventListener('input', function () {
-        const searchTerm = searchBox.value.trim().toLowerCase();
+            searchBox.addEventListener('input', function () {
+                const searchTerm = searchBox.value.trim().toLowerCase();
 
-        // Cell styling function for inset shadows
-        const getCellStyle = (status) => {
-            if (status === 'Pending') {
-                return "background-color: #fff9e6; box-shadow: inset 0 0 8px rgba(255, 223, 80, 0);";
-            } else if (status === 'Rejected') {
-                return "background-color: #ffeaea; box-shadow: inset 0 0 8px rgba(255, 80, 80, 0);";
-            } else if (status === 'Success') {
-                return "background-color: #eaffea; box-shadow: inset 0 0 8px rgba(80, 255, 110, 0);";
-            }
-            return "";
-        };
+                // Cell styling function for inset shadows
+                const getCellStyle = (status) => {
+                    if (status === 'Pending') {
+                        return "background-color: #fff9e6; box-shadow: inset 0 0 8px rgba(255, 223, 80, 0);";
+                    } else if (status === 'Rejected') {
+                        return "background-color: #ffeaea; box-shadow: inset 0 0 8px rgba(255, 80, 80, 0);";
+                    } else if (status === 'Success') {
+                        return "background-color: #eaffea; box-shadow: inset 0 0 8px rgba(80, 255, 110, 0);";
+                    }
+                    return "";
+                };
 
-        const renderRows = (list) => {
-            $('#dt').empty();
-            list.forEach(student => {
-                const cellStyle = getCellStyle(student.status);
-                let rowData = `<tr>`;
-                rowData += `<td style="${cellStyle}">${student.id}</td>`;
-                rowData += `<td style="${cellStyle}">${student.fname}</td>`;
-                rowData += `<td style="${cellStyle}">${student.mname}</td>`;
-                rowData += `<td style="${cellStyle}">${student.lname}</td>`;
-                rowData += `<td style="${cellStyle}">${student.gender}</td>`;
-                rowData += `<td style="${cellStyle}">${student.twelvem}</td>`;
-                rowData += `<td style="${cellStyle}">${student.tenm}</td>`;
-                rowData += `<td style="${cellStyle}">${student.address}</td>`;
-                rowData += `<td style="${cellStyle}">${student.state}</td>`;
-                rowData += `<td style="${cellStyle}">${student.fillfees}</td>`;
-                rowData += `<td style="${cellStyle}">${student.addharno}</td>`;
-                rowData += `<td style="${cellStyle}">${student.date}</td>`;
-                rowData += `<td style="${cellStyle}">${student.tid}</td>`;
-                rowData += `<td style="${cellStyle}">${student.tname}</td>`;
+                const renderRows = (list) => {
+                    $('#dt').empty();
+                    list.forEach(student => {
+                        const cellStyle = getCellStyle(student.status);
+                        let rowData = `<tr>`;
+                        rowData += `<td style="${cellStyle}">${student.id}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.fname}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.mname}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.lname}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.gender}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.twelvem}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.tenm}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.address}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.state}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.fillfees}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.addharno}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.date}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.tid}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.tname}</td>`;
 
-                if (student.status === 'Pending') {
-                    rowData += `<td><input type='button' style='padding:.7rem .8rem;' value='Review' onclick='reviewAdmission(${student.id})' class='btn btn-warning editbtn'></td>`;
-                } else if (student.status === 'Rejected') {
-                    rowData += `<td><input type='button' style='padding:.7rem .8rem;' value='Rejected' class='btn  editbtn'></td>`;
-                } else {
-                    rowData += `<td><input type='button' style='padding:.7rem .8rem;' value='Success' class='btn  editbtn'></td>`;
-                }
+                        if (student.status === 'Pending') {
+                            rowData += `<td><input type='button' style='padding:.7rem .8rem;' value='Review' onclick='reviewAdmission(${student.id})' class='btn btn-warning editbtn'></td>`;
+                        } else if (student.status === 'Rejected') {
+                            rowData += `<td><input type='button' style='padding:.7rem .8rem;' value='Rejected' class='btn  editbtn'></td>`;
+                        } else {
+                            rowData += `<td><input type='button' style='padding:.7rem .8rem;' value='Success' class='btn  editbtn'></td>`;
+                        }
 
-                rowData += `</tr>`;
-                $('#dt').append(rowData);
+                        rowData += `</tr>`;
+                        $('#dt').append(rowData);
+                    });
+                };
+
+                axios.get("http://localhost:3000/studData")
+                    .then(response => {
+                        const students = response.data.studData;
+                        if (!searchTerm) {
+                            renderRows(students);
+                        } else {
+                            const filtered = students.filter(student =>
+                                student.fname.toLowerCase().includes(searchTerm)
+                            );
+                            renderRows(filtered);
+                        }
+                    });
             });
-        };
-
-        axios.get("http://localhost:3000/studData")
-            .then(response => {
-                const students = response.data.studData;
-                if (!searchTerm) {
-                    renderRows(students);
-                } else {
-                    const filtered = students.filter(student =>
-                        student.fname.toLowerCase().includes(searchTerm)
-                    );
-                    renderRows(filtered);
-                }
-            });
-    });
-}
+        }
 
 
         function api() {
-    document.getElementById("todaydate").textContent = formattedDate;
+            document.getElementById("todaydate").textContent = formattedDate;
 
-    // Total Fees
-    axios.get('http://localhost:3000/totolfees')
-        .then(responce => {
-            document.getElementById('ttlFees').innerHTML = responce.data.ttl[0].total;
-        });
+            // Total Fees
+            axios.get('http://localhost:3000/totolfees')
+                .then(responce => {
+                    document.getElementById('ttlFees').innerHTML = responce.data.ttl[0].total;
+                });
 
-    // Submitted Fees
-    axios.get('http://localhost:3000/totolcollectivefees')
-        .then(responce => {
-            document.getElementById('submitedFees').innerHTML = responce.data.total[0].totalcollectivefee;
-        });
+            // Submitted Fees
+            axios.get('http://localhost:3000/totolcollectivefees')
+                .then(responce => {
+                    document.getElementById('submitedFees').innerHTML = responce.data.total[0].totalcollectivefee;
+                });
 
-    // Total Students
-    axios.get('http://localhost:3000/studCount')
-        .then(responce => {
-            document.getElementById('ttlStud').innerHTML = responce.data.coutn[0].ttlstudent;
-        });
+            // Total Students
+            axios.get('http://localhost:3000/studCount')
+                .then(responce => {
+                    document.getElementById('ttlStud').innerHTML = responce.data.coutn[0].ttlstudent;
+                });
 
-    // Empty Slots
-    axios.get('http://localhost:3000/emptySlot')
-        .then(responce => {
-            document.getElementById('emptySlot').innerHTML = responce.data.emptySlot[0].emptyslot;
-        });
+            // Empty Slots
+            axios.get('http://localhost:3000/emptySlot')
+                .then(responce => {
+                    document.getElementById('emptySlot').innerHTML = responce.data.emptySlot[0].emptyslot;
+                });
 
-    // Cell style based on status (for working inset shadow)
-    const getCellStyle = (status) => {
-        if (status === 'Pending') {
-            return "background-color: #fff9e6; box-shadow: inset 0 0 10rem rgba(255, 223, 80, 0);";
-        } else if (status === 'Rejected') {
-            return "background-color: #ffeaea; box-shadow: inset 0 0 10rem rgba(255, 80, 80, 0);";
-        } else if (status === 'Success') {
-            return "background-color: #eaffea; box-shadow: inset 0 0 10rem rgba(80, 255, 110, 0);";
-        }
-        return "";
-    };
-
-    // Fetch and display student data
-    axios.get("http://localhost:3000/studData")
-        .then(responce => {
-            const students = responce.data.studData;
-            $('#dt').empty();
-
-            for (let i = 0; i < students.length; i++) {
-                const student = students[i];
-                const cellStyle = getCellStyle(student.status);
-
-                let rowData = `<tr>`;
-                rowData += `<td style="${cellStyle}">${student.id}</td>`;
-                rowData += `<td style="${cellStyle}">${student.fname}</td>`;
-                rowData += `<td style="${cellStyle}">${student.mname}</td>`;
-                rowData += `<td style="${cellStyle}">${student.lname}</td>`;
-                rowData += `<td style="${cellStyle}">${student.gender}</td>`;
-                rowData += `<td style="${cellStyle}">${student.twelvem}</td>`;
-                rowData += `<td style="${cellStyle}">${student.tenm}</td>`;
-                rowData += `<td style="${cellStyle}">${student.address}</td>`;
-                rowData += `<td style="${cellStyle}">${student.state}</td>`;
-                rowData += `<td style="${cellStyle}">${student.fillfees}</td>`;
-                rowData += `<td style="${cellStyle}">${student.addharno}</td>`;
-                rowData += `<td style="${cellStyle}">${student.date}</td>`;
-                rowData += `<td style="${cellStyle}">${student.tid}</td>`;
-                rowData += `<td style="${cellStyle}">${student.tname}</td>`;
-
-                if (student.status === 'Pending') {
-                    rowData += `<td><input type='button' style='padding:.7rem .8rem;' value='Review' onclick='reviewAdmission(${student.id})' class='btn btn-warning editbtn'></td>`;
-                } else if (student.status === 'Rejected') {
-                    rowData += `<td><input type='button' style='padding:.7rem .8rem;' value='Rejected' class='btn editbtn'></td>`;
-                } else {
-                    rowData += `<td><input type='button' style='padding:.7rem .8rem;' value='Success' class='btn  editbtn'></td>`;
+            // Cell style based on status (for working inset shadow)
+            const getCellStyle = (status) => {
+                if (status === 'Pending') {
+                    return "background-color: #fff9e6; box-shadow: inset 0 0 10rem rgba(255, 223, 80, 0);";
+                } else if (status === 'Rejected') {
+                    return "background-color: #ffeaea; box-shadow: inset 0 0 10rem rgba(255, 80, 80, 0);";
+                } else if (status === 'Success') {
+                    return "background-color: #eaffea; box-shadow: inset 0 0 10rem rgba(80, 255, 110, 0);";
                 }
+                return "";
+            };
 
-                rowData += `</tr>`;
-                $('#dt').append(rowData);
-            }
-        });
-}
+            // Fetch and display student data
+            axios.get("http://localhost:3000/studData")
+                .then(responce => {
+                    const students = responce.data.studData;
+                    $('#dt').empty();
+
+                    for (let i = 0; i < students.length; i++) {
+                        const student = students[i];
+                        const cellStyle = getCellStyle(student.status);
+
+                        let rowData = `<tr>`;
+                        rowData += `<td style="${cellStyle}">${student.id}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.fname}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.mname}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.lname}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.gender}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.twelvem}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.tenm}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.address}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.state}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.fillfees}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.addharno}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.date}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.tid}</td>`;
+                        rowData += `<td style="${cellStyle}">${student.tname}</td>`;
+
+                        if (student.status === 'Pending') {
+                            rowData += `<td><input type='button' style='padding:.7rem .8rem;' value='Review' onclick='reviewAdmission(${student.id})' class='btn btn-warning editbtn'></td>`;
+                        } else if (student.status === 'Rejected') {
+                            rowData += `<td><input type='button' style='padding:.7rem .8rem;' value='Rejected' class='btn editbtn'></td>`;
+                        } else {
+                            rowData += `<td><input type='button' style='padding:.7rem .8rem;' value='Success' class='btn  editbtn'></td>`;
+                        }
+
+                        rowData += `</tr>`;
+                        $('#dt').append(rowData);
+                    }
+                });
+        }
 
 
 
@@ -383,6 +383,37 @@
             localStorage.setItem('studentId', id)
             window.location.href = "pages/forms/edit.html"
         }
+
+        // function reviewAdmission(studentId) {
+        //     Swal.fire({
+        //         title: 'Admission Status',
+        //         text: 'Do you want to approve or reject this admission?',
+        //         icon: 'question',
+        //         showCancelButton: true,
+        //         confirmButtonText: 'Success',
+        //         cancelButtonText: 'Reject',
+        //         reverseButtons: true
+        //     }).then((result) => {
+        //         if (result.isConfirmed) {
+        //             updateAdmissionStatus(studentId, 'Success');
+        //         } else if (result.dismiss === Swal.DismissReason.cancel) {
+        //             updateAdmissionStatus(studentId, 'Rejected');
+        //         }
+        //     });
+        // }
+
+        // function updateAdmissionStatus(studentId, status) {
+        //     axios.put('http://localhost:3000/updateAdmissionStatus', {
+        //         id: studentId,
+        //         status: status
+        //     }).then(responce => {
+        //         Swal.fire({
+        //             title: 'Admission Status Marked',
+        //             icon: 'question',
+        //         })
+        //         window.location.reload()
+        //     })
+        // }
 
         function reviewAdmission(studentId) {
             Swal.fire({
@@ -397,23 +428,46 @@
                 if (result.isConfirmed) {
                     updateAdmissionStatus(studentId, 'Success');
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
-                    updateAdmissionStatus(studentId, 'Rejected');
+                    Swal.fire({
+                        title: 'Reason for Rejection',
+                        input: 'textarea',
+                        inputLabel: 'Please provide a reason for rejecting the admission',
+                        inputPlaceholder: 'Enter your reason here...',
+                        inputAttributes: {
+                            'aria-label': 'Reason for rejection'
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: 'Submit',
+                        cancelButtonText: 'Cancel'
+                    }).then((reasonResult) => {
+                        if (reasonResult.isConfirmed && reasonResult.value.trim() !== '') {
+                            updateAdmissionStatus(studentId, 'Rejected', reasonResult.value.trim());
+                        } else if (reasonResult.isConfirmed && reasonResult.value.trim() === '') {
+                            Swal.fire('Reason required', 'You must provide a reason to reject the application.', 'warning');
+                        }
+                    });
                 }
             });
         }
 
-        function updateAdmissionStatus(studentId, status) {
+        function updateAdmissionStatus(studentId, status, reason = '') {
             axios.put('http://localhost:3000/updateAdmissionStatus', {
                 id: studentId,
-                status: status
-            }).then(responce => {
+                status: status,
+                reason: reason // This assumes your backend accepts a `reason` field
+            }).then(response => {
                 Swal.fire({
-                    title: 'Admission Status Marked',
-                    icon: 'question',
-                })
-                window.location.reload()
-            })
+                    title: 'Admission Status Updated',
+                    text: status === 'Rejected' ? 'Application was rejected.' : 'Application approved successfully.',
+                    icon: status === 'Rejected' ? 'error' : 'success',
+                });
+                window.location.reload();
+            }).catch(error => {
+                console.error('Error updating status:', error);
+                Swal.fire('Error', 'Something went wrong while updating the admission status.', 'error');
+            });
         }
+
 
 
 
@@ -649,7 +703,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="dt" style="text-align: center;">
-                                                
+
                                             </tbody>
                                         </table>
                                     </div>
