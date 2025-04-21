@@ -450,11 +450,11 @@
             });
         }
 
-        function updateAdmissionStatus(studentId, status, reason = '') {
+        function updateAdmissionStatus(studentId, status, reason = document.getElementById('swal2-textarea')) {
             axios.put('http://localhost:3000/updateAdmissionStatus', {
                 id: studentId,
                 status: status,
-                reason: reason // This assumes your backend accepts a `reason` field
+                reject_resone: reason // This assumes your backend accepts a `reason` field
             }).then(response => {
                 Swal.fire({
                     title: 'Admission Status Updated',

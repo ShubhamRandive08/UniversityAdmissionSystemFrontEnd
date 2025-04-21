@@ -390,7 +390,7 @@
         .then(response => {
           const data = response.data.data[0];
           const status = data.status;
-          const reason = data.reason || "No reason provided.";
+          const reason = data.reject_resone || "No reason provided.";
 
           const steps = [
             {
