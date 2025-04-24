@@ -222,7 +222,7 @@
               else
                 rowData += "<td>" + l[i].status + "</td>";
 
-              rowData += "<td><input  type='button' style='padding : .7rem .8rem;' value='Track Application' onclick = 'showHistory(" + l[i].id + ")' class='btn btn-info editbtn'></td>";
+              rowData += "<td><input  type='button' style='padding : .7rem .8rem;' value='Track Application' onclick = 'triggerHistoryWithToast(" + l[i].id + ")' class='btn btn-info editbtn'></td>";
 
               rowData += "</tr>";
               $('#dt').append(rowData);
@@ -266,7 +266,7 @@
                   else
                     rowData += "<td>" + l[i].status + "</td>";
 
-                  rowData += "<td><input  type='button' style='padding : .7rem .8rem;' value='Track Application' onclick = 'showHistory(" + l[i].id + ")' class='btn btn-info editbtn'></td>";
+                  rowData += "<td><input  type='button' style='padding : .7rem .8rem;' value='Track Application' onclick = 'triggerHistoryWithToast(" + l[i].id + ")' class='btn btn-info editbtn'></td>";
 
                   rowData += "</tr>";
                   $('#dt').append(rowData);
@@ -308,7 +308,7 @@
                   else
                     rowData += "<td>" + l[i].status + "</td>";
 
-                  rowData += "<td><input  type='button' style='padding : .7rem .8rem;' value='Track Application' onclick = 'showHistory(" + l[i].id + ")' class='btn btn-info editbtn'></td>";
+                  rowData += "<td><input  type='button' style='padding : .7rem .8rem;' value='Track Application' onclick = 'triggerHistoryWithToast(" + l[i].id + ")' class='btn btn-info editbtn'></td>";
                   rowData += "</tr>";
                   $('#dt').append(rowData);
                 }
@@ -370,7 +370,7 @@
               rowData += "<td><input  type='button' style='padding : .7rem .8rem;' value='Edit' onclick = 'edit(" + l[i].id + ")' class='btn btn-success editbtn'></td>";
               rowData += "<td><input type='button' style='padding : .7rem .8rem;' value='Delete' class='btn btn-danger'></td>";
 
-              rowData += "<td><input  type='button' style='padding : .7rem .8rem;' value='Track Application' onclick = 'showHistory(" + l[i].id + ")' class='btn btn-info editbtn'></td>";
+              rowData += "<td><input  type='button' style='padding : .7rem .8rem;' value='Track Application' onclick = 'triggerHistoryWithToast(" + l[i].id + ")' class='btn btn-info editbtn'></td>";
               rowData += "</tr>";
               $('#dt').append(rowData);
             }
@@ -386,37 +386,37 @@
 
 
     function showHistory(studentId) {
-      axios.post('http://localhost:3000/studDataOnId', { id: studentId })
-        .then(response => {
-          const data = response.data.data[0];
-          const status = data.status;
-          const reason = data.reject_resone || "No reason provided.";
+  axios.post('http://localhost:3000/studDataOnId', { id: studentId })
+    .then(response => {
+      const data = response.data.data[0];
+      const status = data.status;
+      const reason = data.reject_resone || "No reason provided.";
 
-          const steps = [
-            {
-              label: '🕒 Pending',
-              description: `Admission form submitted on ${data.date}`,
-              color: '#3498db',
-              show: true
-            },
-            {
-              label: '✅ Approved',
-              description: `Admission approved by admin on ${data.admin_aprov_date}`,
-              color: '#2ecc71',
-              show: status === 'Success'
-            },
-            {
-              label: '❌ Rejected',
-              description: `Admission rejected by admin on ${data.admin_aprov_date}`,
-              color: '#e74c3c',
-              show: status === 'Rejected',
-              reason: reason
-            }
-          ];
+      const steps = [
+        {
+          label: '🕒 Pending',
+          description: `Admission form submitted on ${data.date}`,
+          color: '#3498db',
+          show: true
+        },
+        {
+          label: '✅ Approved',
+          description: `Admission approved by admin on ${data.admin_aprov_date}`,
+          color: '#2ecc71',
+          show: status === 'Success'
+        },
+        {
+          label: '❌ Rejected',
+          description: `Admission rejected by admin on ${data.admin_aprov_date}`,
+          color: '#e74c3c',
+          show: status === 'Rejected',
+          reason: reason
+        }
+      ];
 
-          const activeSteps = steps.filter(s => s.show);
+      const activeSteps = steps.filter(s => s.show);
 
-          let html = `
+      let html = `
         <div id="historyWrapper" style="position: relative; padding-left: 30px; font-family: 'Segoe UI', sans-serif; font-size: 15px;">
           <style>
             @keyframes pulse {
@@ -439,8 +439,8 @@
           <div class="door-animate">
       `;
 
-          activeSteps.forEach((step) => {
-            html += `
+      activeSteps.forEach((step) => {
+        html += `
           <div style="position: relative; margin-bottom: 40px;">
             <div style="
               position: absolute; 
@@ -460,8 +460,8 @@
           </div>
         `;
 
-            if (step.label.includes('Rejected') && step.reason) {
-              html += `
+        if (step.label.includes('Rejected') && step.reason) {
+          html += `
             <div style="
               margin-left: 10px; 
               margin-top: -30px; 
@@ -477,39 +477,57 @@
               <strong>Reason:</strong> ${step.reason}
             </div>
           `;
-            }
-          });
+        }
+      });
 
-          html += `
+      html += `
           </div>
         </div>
       `;
 
-          Swal.fire({
-            title: '📊 Admission History',
-            html: html,
-            icon: 'info',
-            showCloseButton: true,
-            showConfirmButton: false,
-            customClass: {
-              popup: 'swal2-animate'
-            },
-            width: 700,
-            background: '#ffffff',
-            backdrop: true,
-            showClass: {
-              popup: ''
-            },
-            hideClass: {
-              popup: 'animate__animated animate__fadeOutUp animate__faster'
-            }
-          });
-        })
-        .catch(error => {
-          console.error('Error fetching admission status:', error);
-          Swal.fire('Error', 'Unable to fetch admission history.', 'error');
-        });
-    }
+      Swal.fire({
+        title: '📊 Admission History',
+        html: html,
+        icon: 'info',
+        showCloseButton: true,
+        showConfirmButton: false,
+        customClass: {
+          popup: 'swal2-animate'
+        },
+        width: 700,
+        background: '#ffffff',
+        backdrop: true,
+        showClass: {
+          popup: ''
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp animate__faster'
+        }
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching admission status:', error);
+      Swal.fire('Error', 'Unable to fetch admission history.', 'error');
+    });
+}
+
+// ✅ New Wrapper Function to Call With Toast and Delay
+function triggerHistoryWithToast(studentId) {
+  Swal.fire({
+    toast: true,
+    position: 'top-end',
+    icon: 'info',
+    title: 'Opening Track',
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true
+  });
+
+  setTimeout(() => {
+    showHistory(studentId);
+  }, 1000); // 3 seconds delay
+}
+
 
 
 
