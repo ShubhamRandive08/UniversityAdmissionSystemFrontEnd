@@ -384,36 +384,7 @@
             window.location.href = "pages/forms/edit.html"
         }
 
-        // function reviewAdmission(studentId) {
-        //     Swal.fire({
-        //         title: 'Admission Status',
-        //         text: 'Do you want to approve or reject this admission?',
-        //         icon: 'question',
-        //         showCancelButton: true,
-        //         confirmButtonText: 'Success',
-        //         cancelButtonText: 'Reject',
-        //         reverseButtons: true
-        //     }).then((result) => {
-        //         if (result.isConfirmed) {
-        //             updateAdmissionStatus(studentId, 'Success');
-        //         } else if (result.dismiss === Swal.DismissReason.cancel) {
-        //             updateAdmissionStatus(studentId, 'Rejected');
-        //         }
-        //     });
-        // }
-
-        // function updateAdmissionStatus(studentId, status) {
-        //     axios.put('http://localhost:3000/updateAdmissionStatus', {
-        //         id: studentId,
-        //         status: status
-        //     }).then(responce => {
-        //         Swal.fire({
-        //             title: 'Admission Status Marked',
-        //             icon: 'question',
-        //         })
-        //         window.location.reload()
-        //     })
-        // }
+       
 
         function reviewAdmission(studentId) {
             Swal.fire({
