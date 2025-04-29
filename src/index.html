@@ -29,6 +29,39 @@
 
   <script>
 
+    async function reciptDown() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      // College Heading
+      doc.setFontSize(16);
+      doc.text("Karmveer Hire Arts, Science, Commerce and Education College, Gargoti", 10, 20);
+
+      // Student Info
+      doc.setFontSize(14);
+      doc.text("Name: Shubh Balavant Randive", 10, 40);
+      doc.text("Class: BCA II", 10, 50);
+      doc.text("Fees Paid: ₹10,000", 10, 60);
+
+      // Confirmation Message
+      doc.setFontSize(12);
+      doc.setTextColor(0, 128, 0); // Green
+      doc.text("Congrats! Your Admission Is Confirmed", 10, 80);
+
+      // Principal Info
+      doc.setTextColor(0, 0, 0);
+      doc.text("Principal: Dr. A. R. Shinde", 10, 100);
+
+      // Randomly generated signature simulation
+      const signature = Math.random().toString(36).substring(2, 10);
+      doc.setFont("courier", "italic");
+      doc.text(`Signature: ${signature}`, 10, 110);
+
+      // Auto-download PDF
+      doc.save("Admission_Receipt.pdf");
+    }
+
+
     async function downloadTablePDF() {
       Swal.fire({
         title: "Are you sure?",
@@ -386,37 +419,37 @@
 
 
     function showHistory(studentId) {
-  axios.post('http://localhost:3000/studDataOnId', { id: studentId })
-    .then(response => {
-      const data = response.data.data[0];
-      const status = data.status;
-      const reason = data.reject_resone || "No reason provided.";
+      axios.post('http://localhost:3000/studDataOnId', { id: studentId })
+        .then(response => {
+          const data = response.data.data[0];
+          const status = data.status;
+          const reason = data.reject_resone || "No reason provided.";
 
-      const steps = [
-        {
-          label: '🕒 Pending',
-          description: `Admission form submitted on ${data.date}`,
-          color: '#3498db',
-          show: true
-        },
-        {
-          label: '✅ Approved',
-          description: `Admission approved by admin on ${data.admin_aprov_date}`,
-          color: '#2ecc71',
-          show: status === 'Success'
-        },
-        {
-          label: '❌ Rejected',
-          description: `Admission rejected by admin on ${data.admin_aprov_date}`,
-          color: '#e74c3c',
-          show: status === 'Rejected',
-          reason: reason
-        }
-      ];
+          const steps = [
+            {
+              label: '🕒 Pending',
+              description: `Admission form submitted on ${data.date}`,
+              color: '#3498db',
+              show: true
+            },
+            {
+              label: '✅ Approved',
+              description: `Admission approved by admin on ${data.admin_aprov_date}`,
+              color: '#2ecc71',
+              show: status === 'Success'
+            },
+            {
+              label: '❌ Rejected',
+              description: `Admission rejected by admin on ${data.admin_aprov_date}`,
+              color: '#e74c3c',
+              show: status === 'Rejected',
+              reason: reason
+            }
+          ];
 
-      const activeSteps = steps.filter(s => s.show);
+          const activeSteps = steps.filter(s => s.show);
 
-      let html = `
+          let html = `
         <div id="historyWrapper" style="position: relative; padding-left: 30px; font-family: 'Segoe UI', sans-serif; font-size: 15px;">
           <style>
             @keyframes pulse {
@@ -424,12 +457,10 @@
               50% { box-shadow: 0 0 12px rgba(0,0,0,0.4); transform: scale(1.2); }
               100% { box-shadow: 0 0 0 rgba(0,0,0,0.2); transform: scale(1); }
             }
-
             @keyframes doorOpen {
               0% { transform: perspective(600px) rotateY(90deg); opacity: 0; }
               100% { transform: perspective(600px) rotateY(0deg); opacity: 1; }
             }
-
             .door-animate {
               animation: doorOpen 1s ease forwards;
               transform-origin: left center;
@@ -439,8 +470,8 @@
           <div class="door-animate">
       `;
 
-      activeSteps.forEach((step) => {
-        html += `
+          activeSteps.forEach((step) => {
+            html += `
           <div style="position: relative; margin-bottom: 40px;">
             <div style="
               position: absolute; 
@@ -460,8 +491,8 @@
           </div>
         `;
 
-        if (step.label.includes('Rejected') && step.reason) {
-          html += `
+            if (step.label.includes('Rejected') && step.reason) {
+              html += `
             <div style="
               margin-left: 10px; 
               margin-top: -30px; 
@@ -477,59 +508,76 @@
               <strong>Reason:</strong> ${step.reason}
             </div>
           `;
-        }
-      });
+            }
+          });
 
-      html += `
+          // Only show "Download Receipt" button if NOT Rejected
+          if (status == 'Success') {
+            html += `
+          <div style="text-align: center; margin-top: 20px;">
+            <button onclick="reciptDown()" style="
+              background-color: #4CAF50;
+              border: none;
+              color: white;
+              padding: 10px 20px;
+              text-align: center;
+              text-decoration: none;
+              display: inline-block;
+              font-size: 16px;
+              margin: 4px 2px;
+              border-radius: 12px;
+              cursor: pointer;
+            ">Download Receipt</button>
+          </div>
+        `;
+          }
+
+          html += `
           </div>
         </div>
       `;
 
+          Swal.fire({
+            title: '📊 Admission History',
+            html: html,
+            icon: 'info',
+            showCloseButton: true,
+            showConfirmButton: false,
+            customClass: {
+              popup: 'swal2-animate'
+            },
+            width: 700,
+            background: '#ffffff',
+            backdrop: true,
+            showClass: {
+              popup: ''
+            },
+            hideClass: {
+              popup: 'animate__animated animate__fadeOutUp animate__faster'
+            }
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching admission status:', error);
+          Swal.fire('Error', 'Unable to fetch admission history.', 'error');
+        });
+    }
+
+    function triggerHistoryWithToast(studentId) {
       Swal.fire({
-        title: '📊 Admission History',
-        html: html,
+        toast: true,
+        position: 'top-end',
         icon: 'info',
-        showCloseButton: true,
+        title: 'Opening Track',
         showConfirmButton: false,
-        customClass: {
-          popup: 'swal2-animate'
-        },
-        width: 700,
-        background: '#ffffff',
-        backdrop: true,
-        showClass: {
-          popup: ''
-        },
-        hideClass: {
-          popup: 'animate__animated animate__fadeOutUp animate__faster'
-        }
+        timer: 2000,
+        timerProgressBar: true
       });
-    })
-    .catch(error => {
-      console.error('Error fetching admission status:', error);
-      Swal.fire('Error', 'Unable to fetch admission history.', 'error');
-    });
-}
 
-function triggerHistoryWithToast(studentId) {
-  Swal.fire({
-    toast: true,
-    position: 'top-end',
-    icon: 'info',
-    title: 'Opening Track',
-    showConfirmButton: false,
-    timer: 2000,
-    timerProgressBar: true
-  });
-
-  setTimeout(() => {
-    showHistory(studentId);
-  }, 1000); // 3 seconds delay
-}
-
-
-
-
+      setTimeout(() => {
+        showHistory(studentId);
+      }, 1000); // 1 second delay
+    }
 
     function formatDate(dateString) {
       if (!dateString) return 'N/A';
