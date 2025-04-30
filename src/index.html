@@ -29,36 +29,46 @@
 
   <script>
 
-    async function reciptDown() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
+    async function reciptDown(id) {
+      axios.post('http://localhost:3000/studDataOnStudentId', {
+        id: id
+      })
+        .then(responce => {
+          const studData = responce.data.studData
 
-      // College Heading
-      doc.setFontSize(16);
-      doc.text("Karmveer Hire Arts, Science, Commerce and Education College, Gargoti", 10, 20);
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF({
+            format: "a4"
+          });
 
-      // Student Info
-      doc.setFontSize(14);
-      doc.text("Name: Shubh Balavant Randive", 10, 40);
-      doc.text("Class: BCA II", 10, 50);
-      doc.text("Fees Paid: ₹10,000", 10, 60);
 
-      // Confirmation Message
-      doc.setFontSize(12);
-      doc.setTextColor(0, 128, 0); // Green
-      doc.text("Congrats! Your Admission Is Confirmed", 10, 80);
 
-      // Principal Info
-      doc.setTextColor(0, 0, 0);
-      doc.text("Principal: Dr. A. R. Shinde", 10, 100);
+          doc.setFontSize(18);
+          doc.text(`ADMISSION RECIPT 2025`, 10, 20);
 
-      // Randomly generated signature simulation
-      const signature = Math.random().toString(36).substring(2, 10);
-      doc.setFont("courier", "italic");
-      doc.text(`Signature: ${signature}`, 10, 110);
+          doc.setFontSize(16);
+          doc.text(`Karmveer Hire Arts, Science, Commerce and Education College, Gargoti`, 10, 40);
 
-      // Auto-download PDF
-      doc.save("Admission_Receipt.pdf");
+          doc.setFontSize(14);
+          doc.text(`Name : ${studData[0].fname + " " + studData[0].mname + " " + studData[0].lname}`, 10, 60);
+          doc.text(`Class : BCA III`, 10, 70);
+          doc.text(`Fees Paid : Rs. ${studData[0].fillfees}`, 10, 80);
+
+          doc.setFontSize(12);
+          doc.setTextColor(0, 128, 0); // Green
+          doc.text(`Congrats! Your Admission Is Confirmed`, 10, 90);
+
+          doc.setFont(`courier`, `italic`);
+          doc.text(`Signature : `, 10, 120);
+
+          doc.setTextColor(0, 0, 0);
+          doc.text(`Principal : Dr. A. R. Shinde`, 10, 110);
+
+          doc.save(`Admission_Receipt.pdf`);
+        })
+
+
+
     }
 
 
@@ -150,7 +160,6 @@
           }
         })
     }
-
 
     const today = new Date();
 
@@ -515,7 +524,7 @@
           if (status == 'Success') {
             html += `
           <div style="text-align: center; margin-top: 20px;">
-            <button onclick="reciptDown()" style="
+            <button onclick="reciptDown(`+ studentId + `)" style="
               background-color: #4CAF50;
               border: none;
               color: white;
