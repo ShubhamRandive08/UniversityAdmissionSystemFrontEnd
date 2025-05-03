@@ -83,7 +83,7 @@
               text: 'You Cant Able To Make Addmission. Please Contact with ADMIN.',
             });
           } else {
-            if (document.getElementById('fname').value == '' || document.getElementById('mname').value == '' || document.getElementById('lname').value == '' || document.getElementById('gender').value == '' || document.getElementById('dob').value == '' || document.getElementById('twelveth').value == '' || document.getElementById('tenth').value == '' || document.getElementById('add').value == '' || document.getElementById('state').value == '' || document.getElementById('mb').value == '' || document.getElementById('pcode').value == '' || document.getElementById('city').value == '' || document.getElementById('fee').value == '' || document.getElementById('aadharno').value == '') {
+            if (document.getElementById('fname').value == '' || document.getElementById('mname').value == '' || document.getElementById('lname').value == '' || document.getElementById('gender').value == '' || document.getElementById('dob').value == '' || document.getElementById('twelveth').value == '' || document.getElementById('tenth').value == '' || document.getElementById('add').value == '' || document.getElementById('state').value == '' || document.getElementById('mb').value == '' || document.getElementById('pcode').value == '' || document.getElementById('city').value == '' || document.getElementById('fee').value == '' || document.getElementById('aadharno').value == '', document.getElementById('course').value == '') {
               Swal.fire({
                 icon: 'warning',  // Success icon (green check)
                 title: 'Please Fill All Details!',
@@ -107,6 +107,7 @@
                   "fname": document.getElementById('fname').value,
                   "mname": document.getElementById('mname').value,
                   "lname": document.getElementById('lname').value,
+                  "class1" : document.getElementById('course').value,
                   "gender": document.getElementById('gender').value,
                   "dob": document.getElementById('dob').value,
                   "twelvem": document.getElementById('twelveth').value,
@@ -448,9 +449,9 @@
                               placeholder="Bachaler Of Computer Application" disabled/> -->
                               <select name="" class="form-control" id="course">
                                 <option value="Select">Select Your Course</option>
-                                <option value="bcai">BCA I</option>
-                                <option value="bcaii">BCA II</option>
-                                <option value="bcaiii">BCA III</option>
+                                <option value="BCA I">BCA I</option>
+                                <option value="BCA II">BCA II</option>
+                                <option value="BCA III">BCA III</option>
                               </select>
                           </div>
                         </div>
