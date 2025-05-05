@@ -59,21 +59,15 @@
         }
 
         function api() {
-            axios.get("http://localhost:3000/Sdata")
+            axios.get("http://localhost:3000/GetEvent")
                 .then(responce => {
-                    let l = responce.data.data;
+                    let l = responce.data.EventData;
 
                     for (let i = 0; i < l.length; i++) {
-                        var rowData = "<tr><td>" + l[i].tname + "</td>";
-                        rowData += "<td>" + l[i].email + "</td>";
-                        rowData += "<td>" + l[i].stutas.charAt(0).toUpperCase() + l[i].stutas.slice(1).toLowerCase() + "</td>";
-                        // Add Lock/Unlock button based on the status
-                        if (l[i].stutas == 'unlock') {
-                            rowData += "<td><input type='button' value='Lock' class='btn btn-warning' onclick='Lock(" + l[i].sid + ")'></td>";
-                        } else {
-                            rowData += "<td><input type='button' value='Unlock' class='btn btn-primary' onclick='Unlock(" + l[i].sid + ")'></td>";
-                        }
-                        rowData += "<td><input type='button' value='DELETE' class='btn btn-danger' onclick='Delete(" + l[i].sid + ")'></td>";
+                        var rowData = "<tr><td>" + l[i].event_title + "</td>";
+                        rowData += "<td>" + l[i].event_date + "</td>";
+                        rowData += "<td>" + l[i].event_time + "</td>";
+                        
                         rowData += "</tr>";
                         $('#dt').append(rowData);
 
@@ -131,6 +125,8 @@
         .time-container select {
             flex: 1;
         }
+
+
     </style>
 </head>
 
@@ -213,23 +209,36 @@
                             <span class="menu-title text-black"><b>Added Events</b></span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" href="Publish_Report.html">
                             <i class="mdi mdi-upload menu-icon text-white"></i>
                             <span class="menu-title text-black"><b>Publish Reports</b></span>
                         </a>
-                    </li>
+                    </li> -->
 
                 </ul>
             </nav>
-
-
-
-
-            <div class="container hidden" id="userSection">
-                <h2>Events (<span id="eventCount">0</span>)</h2>
-                <div id="eventList"></div>
-            </div>
+            <div class="col-lg-10 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h1 style="font-size: 1.3rem;" class="card-title">Your Events</h1>
+                    <div class="table-responsive">
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th>Event Title</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                          </tr>
+                        </thead>
+                        <tbody id="dt">
+          
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
             <!-- main-panel ends -->
         </div>
