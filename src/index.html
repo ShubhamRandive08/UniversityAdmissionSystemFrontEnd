@@ -236,93 +236,178 @@
         title: `Pay Remaining Fees: ₹${remFees}`,
         icon: 'info',
         showCancelButton: true,
-        confirmButtonText: 'Pay',
+        confirmButtonText: 'Pay Now',
         cancelButtonText: 'Cancel',
-        background: 'rgba(0, 0, 0, 0.5)',
+        background: '#1e1e2f',
+        color: '#fff',
         backdrop: 'rgba(0, 0, 0, 0.8)',
         customClass: {
-          popup: 'animate__animated animate__zoomIn',
+          popup: 'animate__animated animate__fadeInDown'
         }
       }).then(result => {
         if (result.isConfirmed) {
           Swal.fire({
             title: 'Choose Payment Method',
-            input: 'radio',
-            inputOptions: {
-              qr: 'Pay with QR Code',
-              cash: 'Pay with Cash',
-            },
-            inputValidator: (value) => {
-              if (!value) return 'You need to choose a payment method!';
-            },
-            showCancelButton: true,
-            confirmButtonText: 'Proceed',
-            cancelButtonText: 'Back',
-            background: 'rgba(0, 0, 0, 0.5)',
+            html: `
+          <div class="payment-options">
+            <button class="payment-btn" data-method="upi">UPI</button>
+            <button class="payment-btn" data-method="card">Credit/Debit Card</button>
+            <button class="payment-btn" data-method="netbanking">Net Banking</button>
+            <button class="payment-btn" data-method="qr">QR Code</button>
+            <button class="payment-btn" data-method="cash">Cash</button>
+          </div>
+        `,
+            showConfirmButton: false,
+            background: '#1e1e2f',
+            color: '#fff',
             backdrop: 'rgba(0, 0, 0, 0.8)',
-          }).then(method => {
-            if (method.value === 'cash') {
-              Swal.fire({
-                title: 'Enter Cash Amount',
-                html: `
-              <input type="number" id="cashAmount" class="swal2-input" placeholder="Enter Amount">
-              <button id="submitCash" class="swal2-confirm swal2-styled" style="margin-top:10px" disabled>Submit</button>
-            `,
-                showConfirmButton: false,
-                didOpen: () => {
-                  const input = document.getElementById('cashAmount');
-                  const btn = document.getElementById('submitCash');
-                  input.addEventListener('input', () => {
-                    btn.disabled = !(+input.value >= remFees);
-                  });
-                  btn.addEventListener('click', () => {
+            didOpen: () => {
+              const buttons = Swal.getHtmlContainer().querySelectorAll('.payment-btn');
+              buttons.forEach(btn => {
+                btn.style = `
+              margin: 8px;
+              padding: 12px 20px;
+              background: #3a3f58;
+              color: white;
+              border: none;
+              border-radius: 8px;
+              cursor: pointer;
+              font-weight: bold;
+              transition: background 0.3s;
+            `;
+                btn.addEventListener('mouseover', () => {
+                  btn.style.background = '#4e5576';
+                });
+                btn.addEventListener('mouseout', () => {
+                  btn.style.background = '#3a3f58';
+                });
+
+                btn.addEventListener('click', () => {
+                  const method = btn.getAttribute('data-method');
+
+                  if (method === 'cash') {
+                    Swal.fire({
+                      title: 'Enter Cash Amount',
+                      html: `
+                    <input type="number" id="cashAmount" class="swal2-input" placeholder="Enter Amount">
+                    <button id="submitCash" class="swal2-confirm swal2-styled" style="margin-top:10px" disabled>Submit</button>
+                  `,
+                      showConfirmButton: false,
+                      background: '#1e1e2f',
+                      color: '#fff',
+                      backdrop: 'rgba(0, 0, 0, 0.8)',
+                      didOpen: () => {
+                        const input = document.getElementById('cashAmount');
+                        const btn = document.getElementById('submitCash');
+                        input.addEventListener('input', () => {
+                          btn.disabled = !(+input.value >= remFees);
+                        });
+                        btn.addEventListener('click', () => {
+                          updateFees(id, remFees);
+                          Swal.fire({
+                            icon: 'success',
+                            title: 'Payment Successful!',
+                            text: `₹${input.value} paid in Cash.`,
+                            timer: 2500,
+                            showConfirmButton: false,
+                            background: '#1e1e2f',
+                            color: '#fff',
+                            backdrop: 'rgba(0, 0, 0, 0.8)',
+                            iconColor: '#00ff00',
+                            customClass: {
+                              popup: 'animate__animated animate__bounceIn'
+                            }
+                          }).then(() => {
+                            window.location.href = 'index.html';
+                          });
+                        });
+                      }
+                    });
+                  } else if (method === 'qr') {
+                    Swal.fire({
+                      title: 'Scan to Pay',
+                      html: `
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=pay:${id}-${remFees}" alt="QR Code"><br><br>
+                    <strong>Amount: ₹${remFees}</strong><br><br>
+                    <em>Click below after payment</em>
+                  `,
+                      showCancelButton: true,
+                      confirmButtonText: 'I Have Paid',
+                      cancelButtonText: 'Cancel',
+                      background: '#1e1e2f',
+                      color: '#fff',
+                      backdrop: 'rgba(0, 0, 0, 0.8)',
+                    }).then(qrResult => {
+                      if (qrResult.isConfirmed) {
+                        updateFees(id, remFees);
+                        Swal.fire({
+                          icon: 'success',
+                          title: 'Payment Received!',
+                          text: `₹${remFees} paid via QR Code.`,
+                          timer: 2500,
+                          showConfirmButton: false,
+                          background: '#1e1e2f',
+                          color: '#fff',
+                          backdrop: 'rgba(0, 0, 0, 0.8)',
+                          iconColor: '#00ff00',
+                          customClass: {
+                            popup: 'animate__animated animate__bounceIn'
+                          }
+                        }).then(() => {
+                          window.location.href = 'index.html';
+                        });
+                      }
+                    });
+                  } else {
+                    updateFees(id, remFees);
                     Swal.fire({
                       icon: 'success',
                       title: 'Payment Successful!',
-                      text: `₹${input.value} paid via Cash.`,
+                      text: `₹${remFees} paid via ${method.toUpperCase()}.`,
                       timer: 2500,
                       showConfirmButton: false,
-                      background: 'rgba(0, 0, 0, 0.5)',
+                      background: '#1e1e2f',
+                      color: '#fff',
                       backdrop: 'rgba(0, 0, 0, 0.8)',
                       iconColor: '#00ff00',
                       customClass: {
-                        popup: 'animate__animated animate__bounceIn',
+                        popup: 'animate__animated animate__zoomIn'
                       }
+                    }).then(() => {
+                      window.location.href = 'index.html';
                     });
-                  });
-                }
-              });
-            } else if (method.value === 'qr') {
-              Swal.fire({
-                title: 'Scan to Pay',
-                html: `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=pay:${id}-${remFees}" alt="QR Code"><br><br>Waiting for confirmation...`,
-                showCancelButton: true,
-                confirmButtonText: 'I Have Paid',
-                cancelButtonText: 'Cancel',
-                background: 'rgba(0, 0, 0, 0.5)',
-                backdrop: 'rgba(0, 0, 0, 0.8)',
-              }).then(qrResult => {
-                if (qrResult.isConfirmed) {
-                  Swal.fire({
-                    icon: 'success',
-                    title: 'Payment Received!',
-                    text: `Payment of ₹${remFees} via QR code confirmed.`,
-                    timer: 2500,
-                    showConfirmButton: false,
-                    background: 'rgba(0, 0, 0, 0.5)',
-                    backdrop: 'rgba(0, 0, 0, 0.8)',
-                    iconColor: '#00ff00',
-                    customClass: {
-                      popup: 'animate__animated animate__bounceIn',
-                    }
-                  });
-                }
+                  }
+                });
               });
             }
           });
         }
       });
     }
+
+    function updateFees(id, remFees) {
+      fillfee = 20000 - remFees;
+      uptfee = fillfee + remFees
+      axios.put("http://localhost:3000/updateFees", {
+        id: id,
+        fee: uptfee
+      })
+        .then(response => {
+          console.log("Fees updated successfully:", response.data);
+        })
+        .catch(error => {
+          console.error("Error updating fees:", error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Update Failed',
+            text: 'Could not update fees. Please try again later.',
+            background: '#1e1e2f',
+            color: '#fff',
+            backdrop: 'rgba(0, 0, 0, 0.8)'
+          });
+        });
+    }
+
 
 
     function searchData() {
@@ -410,7 +495,12 @@
                   else
                     rowData += "<td>" + l[i].status + "</td>";
 
-                  rowData += "<td><input type='button' style='padding : .7rem .8rem;' value='Delete' class='btn btn-danger' onclick='del(" + l[i].id + ")'></td>";
+                  if (l[i].fillfees == 20000) {
+                    rowData += "<td>0</td>";
+                  } else {
+                    let remFess = 20000 - l[i].fillfees;
+                    rowData += "<td><input type='button' style='padding : .7rem .8rem;' value='Pay " + remFess + "'class='btn btn-primary' onclick='payRemFess(" + l[i].id + "," + remFess + ")'></td>";
+                  }
 
                   rowData += "<td><input  type='button' style='padding : .7rem .8rem;' value='Track Application' onclick = 'triggerHistoryWithToast(" + l[i].id + ")' class='btn btn-info editbtn'></td>";
 
@@ -455,7 +545,12 @@
                   else
                     rowData += "<td>" + l[i].status + "</td>";
 
-                  rowData += "<td><input type='button' style='padding : .7rem .8rem;' value='Delete' class='btn btn-danger' onclick='del(" + l[i].id + ")'></td>";
+                  if (l[i].fillfees == 20000) {
+                    rowData += "<td>0</td>";
+                  } else {
+                    let remFess = 20000 - l[i].fillfees;
+                    rowData += "<td><input type='button' style='padding : .7rem .8rem;' value='Pay " + remFess + "'class='btn btn-primary' onclick='payRemFess(" + l[i].id + "," + remFess + ")'></td>";
+                  }
 
                   rowData += "<td><input  type='button' style='padding : .7rem .8rem;' value='Track Application' onclick = 'triggerHistoryWithToast(" + l[i].id + ")' class='btn btn-info editbtn'></td>";
                   rowData += "</tr>";
