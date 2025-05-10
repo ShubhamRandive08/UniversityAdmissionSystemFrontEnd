@@ -55,25 +55,82 @@
         }
 
         function setCount() {
-                localStorage.setItem('newEventCount', 0);
+            localStorage.setItem('newEventCount', 0);
         }
 
         function api() {
             axios.get("http://localhost:3000/GetEvent")
-                .then(responce => {
-                    let l = responce.data.EventData;
+                .then(response => {
+                    let events = response.data.EventData;
+                    $('#dt').empty(); // Clear table before adding new rows
 
-                    for (let i = 0; i < l.length; i++) {
-                        var rowData = "<tr><td>" + l[i].event_title + "</td>";
-                        rowData += "<td>" + l[i].event_date + "</td>";
-                        rowData += "<td>" + l[i].event_time + "</td>";
-                        
-                        rowData += "</tr>";
-                        $('#dt').append(rowData);
-
-                    }
+                    events.forEach(event => {
+                        const row = `
+                        <tr data-id="${event.eid}">
+                            <td>${event.event_title}</td>
+                            <td>${event.event_date}</td>
+                            <td>${event.event_time}</td>
+                            <td>
+                                <button class="btn btn-danger btn-sm delete-btn" title="Delete Event" onclick = "delEvent(${event.eid})">🗑️</button>
+                            </td>
+                        </tr>`;
+                        $('#dt').append(row);
+                    });
                 })
+                .catch(() => {
+                    Swal.fire("Error", "Failed to fetch events", "error");
+                });
         }
+
+        function delEvent(id) {
+            api();
+
+            // Remove any previously bound event handlers to avoid multiple bindings
+            $('#dt').off('click', '.delete-btn');
+
+            // Event delegation for delete buttons
+            $('#dt').on('click', '.delete-btn', async function () {
+                const row = $(this).closest('tr');
+                const eid = id;
+
+                const result = await Swal.fire({
+                    title: "Are you sure?",
+                    text: "This will permanently delete the event.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "Yes, delete it!"
+                });
+
+                if (result.isConfirmed) {
+                    try {
+                        const response = await axios.delete("http://localhost:3000/deleteEvent", {
+                            data: { eid: eid }
+                        });
+
+                        if (response.status === 200) {
+                            row.remove();
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "Event has been deleted.",
+                                icon: "success",
+                                timer: 1500,
+                                showConfirmButton: false
+                            }).then(() => {
+                                // Redirect after successful deletion
+                                window.location.href = "Added_Events.html";
+                            });
+                        } else {
+                            Swal.fire("Error", "Failed to delete event", "error");
+                        }
+                    } catch (error) {
+                        Swal.fire("Error", "Failed to delete event", "error");
+                    }
+                }
+            });
+        }
+
 
     </script>
     <style>
@@ -125,8 +182,6 @@
         .time-container select {
             flex: 1;
         }
-
-
     </style>
 </head>
 
@@ -220,25 +275,26 @@
             </nav>
             <div class="col-lg-10 grid-margin stretch-card">
                 <div class="card">
-                  <div class="card-body">
-                    <h1 style="font-size: 1.3rem;" class="card-title">Your Events</h1>
-                    <div class="table-responsive">
-                      <table class="table table-striped">
-                        <thead>
-                          <tr>
-                            <th>Event Title</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                          </tr>
-                        </thead>
-                        <tbody id="dt">
-          
-                        </tbody>
-                      </table>
+                    <div class="card-body">
+                        <h1 style="font-size: 1.3rem;" class="card-title">Your Events</h1>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Event Title</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dt">
+
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                  </div>
                 </div>
-              </div>
+            </div>
 
             <!-- main-panel ends -->
         </div>
