@@ -30,7 +30,7 @@
     function api(){
         const id = localStorage.getItem('studentId')
         
-        axios.post('http://localhost:3000/studDataOnId',{
+        axios.post('http://localhost:5000/studDataOnId',{
             "id" : id
         })
         .then(responce =>{
@@ -48,7 +48,7 @@
     }
 
     function upt(){
-        axios.put('http://localhost:3000/uptStudData',{
+        axios.put('http://localhost:5000/uptStudData',{
             "fname" : document.getElementById('fname').value, 
             "mname" : document.getElementById('mname').value, 
             "lname" : document.getElementById('lname').value, 

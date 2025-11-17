@@ -72,7 +72,7 @@
     }
 
     function studAdd() {
-      axios.post('http://localhost:3000/getStatus', {
+      axios.post('http://localhost:5000/getStatus', {
         "sid": localStorage.getItem('tid')
       })
         .then(responce => {
@@ -103,7 +103,7 @@
               });
             } else {
               if (parseInt(document.getElementById('fee').value) >= 5000) {
-                axios.post('http://localhost:3000/insertStudent', {
+                axios.post('http://localhost:5000/insertStudent', {
                   "fname": document.getElementById('fname').value,
                   "mname": document.getElementById('mname').value,
                   "lname": document.getElementById('lname').value,
@@ -128,7 +128,7 @@
                     Swal.fire({
                       icon: 'success',  // Success icon (green check)
                       title: 'Student Admission Application Successed !',
-                      timer: 3000,  // Display for 3 seconds
+                      timer: 5000,  // Display for 3 seconds
                       background: 'rgba(0, 0, 0, 0.5)',  // Glassmorphism effect
                       backdrop: 'rgba(0, 0, 0, 0.8)',  // Semi-transparent background
                       color: '#fff',  // Text color

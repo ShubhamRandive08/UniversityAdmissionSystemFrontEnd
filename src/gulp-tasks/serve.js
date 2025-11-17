@@ -17,7 +17,7 @@ gulp.task('sass', function () {
 gulp.task('serve', gulp.series('sass', function () {
 
     browserSync.init({
-        port: 3000,
+        port: 5000,
         server: "../dist",
         ghostMode: false,
         notify: false

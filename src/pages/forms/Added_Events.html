@@ -59,7 +59,7 @@
         }
 
         function api() {
-            axios.get("http://localhost:3000/GetEvent")
+            axios.get("http://localhost:5000/GetEvent")
                 .then(response => {
                     let events = response.data.EventData;
                     $('#dt').empty(); // Clear table before adding new rows
@@ -105,7 +105,7 @@
 
                 if (result.isConfirmed) {
                     try {
-                        const response = await axios.delete("http://localhost:3000/deleteEvent", {
+                        const response = await axios.delete("http://localhost:5000/deleteEvent", {
                             data: { eid: eid }
                         });
 

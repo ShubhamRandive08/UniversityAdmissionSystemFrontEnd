@@ -57,7 +57,7 @@
     function api() {
       document.getElementById('tname').innerHTML = localStorage.getItem('tname')
 
-      axios.get("http://localhost:3000/Sdata")
+      axios.get("http://localhost:5000/Sdata")
         .then(responce => {
           let l = responce.data.data;
 

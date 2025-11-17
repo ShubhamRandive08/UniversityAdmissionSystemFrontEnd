@@ -60,7 +60,7 @@
     });
 
     setTimeout(() => {
-      axios.post('http://localhost:3000/getToken', {
+      axios.post('http://localhost:5000/getToken', {
         key: 'key'
       }).then(response => {
         localStorage.setItem('authToken', response.data.token);
@@ -122,7 +122,7 @@
         // Hold the animation a bit longer before redirect (5 seconds)
         setTimeout(() => {
           window.location.href = '../../../src/index_admin.html';
-        }, 3000);
+        }, 5000);
 
       } else {
         Swal.fire({
