@@ -217,7 +217,7 @@
             const r = confirm("Do you want to delete this record?");
 
             if (r) {
-                axios.delete('https://universityadmissionsystembackend.onrender.com//delStudent', {
+                axios.delete('https://universityadmissionsystembackend.onrender.com/delStudent', {
                     data: { "id": id }
                 }).then(
                     responce => {
@@ -281,7 +281,7 @@
                     });
                 };
 
-                axios.get("https://universityadmissionsystembackend.onrender.com//studData")
+                axios.get("https://universityadmissionsystembackend.onrender.com/studData")
                     .then(response => {
                         const students = response.data.studData;
                         if (!searchTerm) {
@@ -301,25 +301,25 @@
             document.getElementById("todaydate").textContent = formattedDate;
 
             // Total Fees
-            axios.get('https://universityadmissionsystembackend.onrender.com//totolfees')
+            axios.get('https://universityadmissionsystembackend.onrender.com/totolfees')
                 .then(responce => {
                     document.getElementById('ttlFees').innerHTML = responce.data.ttl[0].total;
                 });
 
             // Submitted Fees
-            axios.get('https://universityadmissionsystembackend.onrender.com//totolcollectivefees')
+            axios.get('https://universityadmissionsystembackend.onrender.com/totolcollectivefees')
                 .then(responce => {
                     document.getElementById('submitedFees').innerHTML = responce.data.total[0].totalcollectivefee;
                 });
 
             // Total Students
-            axios.get('https://universityadmissionsystembackend.onrender.com//studCount')
+            axios.get('https://universityadmissionsystembackend.onrender.com/studCount')
                 .then(responce => {
                     document.getElementById('ttlStud').innerHTML = responce.data.coutn[0].ttlstudent;
                 });
 
             // Empty Slots
-            axios.get('https://universityadmissionsystembackend.onrender.com//emptySlot')
+            axios.get('https://universityadmissionsystembackend.onrender.com/emptySlot')
                 .then(responce => {
                     document.getElementById('emptySlot').innerHTML = responce.data.emptySlot[0].emptyslot;
                 });
@@ -337,7 +337,7 @@
             };
 
             // Fetch and display student data
-            axios.get("https://universityadmissionsystembackend.onrender.com//studData")
+            axios.get("https://universityadmissionsystembackend.onrender.com/studData")
                 .then(responce => {
                     const students = responce.data.studData;
                     $('#dt').empty();
@@ -422,7 +422,7 @@
         }
 
         function updateAdmissionStatus(studentId, status, reason = document.getElementById('swal2-textarea')) {
-            axios.put('https://universityadmissionsystembackend.onrender.com//updateAdmissionStatus', {
+            axios.put('https://universityadmissionsystembackend.onrender.com/updateAdmissionStatus', {
                 id: studentId,
                 status: status,
                 reject_resone: reason // This assumes your backend accepts a `reason` field

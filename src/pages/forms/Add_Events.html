@@ -58,7 +58,7 @@
             const rs = confirm("Do you wnat to change the teacher Status Code?")
 
             if (rs) {
-                axios.put('https://universityadmissionsystembackend.onrender.com//addLockStutas', {
+                axios.put('https://universityadmissionsystembackend.onrender.com/addLockStutas', {
                     "sid": id
                 })
                     .then(responce => {
@@ -72,7 +72,7 @@
             const rs = confirm("Do you wnat to change the teacher Status Code?")
 
             if (rs) {
-                axios.put('https://universityadmissionsystembackend.onrender.com//addUnlockStutas', {
+                axios.put('https://universityadmissionsystembackend.onrender.com/addUnlockStutas', {
                     "sid": id
                 })
                     .then(responce => {
@@ -83,7 +83,7 @@
         }
 
         function api() {
-            axios.get("https://universityadmissionsystembackend.onrender.com//Sdata")
+            axios.get("https://universityadmissionsystembackend.onrender.com/Sdata")
                 .then(responce => {
                     let l = responce.data.data;
 
@@ -121,7 +121,7 @@
             const rs = confirm('Are you sure to delete the this record?');
             if (rs) {
                 // alert(id)
-                axios.delete('https://universityadmissionsystembackend.onrender.com//delStaff', {
+                axios.delete('https://universityadmissionsystembackend.onrender.com/delStaff', {
                     data: { "id": id }
                 })
                     .then(responce => {
@@ -135,7 +135,7 @@
         }
 
         function loadEventData() {
-            axios.get("https://universityadmissionsystembackend.onrender.com//GetEvent")
+            axios.get("https://universityadmissionsystembackend.onrender.com/GetEvent")
                 .then(responce => {
                     localStorage.setItem("events", JSON.stringify(responce.data.EventData));
                 })
@@ -358,7 +358,7 @@
                 //         return;
                 //     }
 
-                //     axios.post("https://universityadmissionsystembackend.onrender.com//insertEvent", {
+                //     axios.post("https://universityadmissionsystembackend.onrender.com/insertEvent", {
                 //         "event_title": title,
                 //         "event_date": date,
                 //         "event_time": time
@@ -396,7 +396,7 @@
                         return;
                     }
 
-                    axios.post("https://universityadmissionsystembackend.onrender.com//insertEvent", {
+                    axios.post("https://universityadmissionsystembackend.onrender.com/insertEvent", {
                         "event_title": title,
                         "event_date": date,
                         "event_time": time

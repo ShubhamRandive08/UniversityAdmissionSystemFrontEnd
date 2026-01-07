@@ -58,7 +58,7 @@
         
       document.getElementById('tname').innerHTML = localStorage.getItem('tname')
 
-      axios.get("https://universityadmissionsystembackend.onrender.com//GetEvent")
+      axios.get("https://universityadmissionsystembackend.onrender.com/GetEvent")
         .then(responce => {
           let l = responce.data.EventData;
 

@@ -59,7 +59,7 @@
         }
 
         function api() {
-            axios.get("https://universityadmissionsystembackend.onrender.com//GetEvent")
+            axios.get("https://universityadmissionsystembackend.onrender.com/GetEvent")
                 .then(response => {
                     let events = response.data.EventData;
                     $('#dt').empty(); // Clear table before adding new rows
@@ -105,7 +105,7 @@
 
                 if (result.isConfirmed) {
                     try {
-                        const response = await axios.delete("https://universityadmissionsystembackend.onrender.com//deleteEvent", {
+                        const response = await axios.delete("https://universityadmissionsystembackend.onrender.com/deleteEvent", {
                             data: { eid: eid }
                         });
 
