@@ -217,7 +217,7 @@
             const r = confirm("Do you want to delete this record?");
 
             if (r) {
-                axios.delete('http://localhost:5000/delStudent', {
+                axios.delete('http://localhost:3000/delStudent', {
                     data: { "id": id }
                 }).then(
                     responce => {
@@ -281,7 +281,7 @@
                     });
                 };
 
-                axios.get("http://localhost:5000/studData")
+                axios.get("http://localhost:3000/studData")
                     .then(response => {
                         const students = response.data.studData;
                         if (!searchTerm) {
@@ -301,25 +301,25 @@
             document.getElementById("todaydate").textContent = formattedDate;
 
             // Total Fees
-            axios.get('http://localhost:5000/totolfees')
+            axios.get('http://localhost:3000/totolfees')
                 .then(responce => {
                     document.getElementById('ttlFees').innerHTML = responce.data.ttl[0].total;
                 });
 
             // Submitted Fees
-            axios.get('http://localhost:5000/totolcollectivefees')
+            axios.get('http://localhost:3000/totolcollectivefees')
                 .then(responce => {
                     document.getElementById('submitedFees').innerHTML = responce.data.total[0].totalcollectivefee;
                 });
 
             // Total Students
-            axios.get('http://localhost:5000/studCount')
+            axios.get('http://localhost:3000/studCount')
                 .then(responce => {
                     document.getElementById('ttlStud').innerHTML = responce.data.coutn[0].ttlstudent;
                 });
 
             // Empty Slots
-            axios.get('http://localhost:5000/emptySlot')
+            axios.get('http://localhost:3000/emptySlot')
                 .then(responce => {
                     document.getElementById('emptySlot').innerHTML = responce.data.emptySlot[0].emptyslot;
                 });
@@ -337,7 +337,7 @@
             };
 
             // Fetch and display student data
-            axios.get("http://localhost:5000/studData")
+            axios.get("http://localhost:3000/studData")
                 .then(responce => {
                     const students = responce.data.studData;
                     $('#dt').empty();
@@ -422,7 +422,7 @@
         }
 
         function updateAdmissionStatus(studentId, status, reason = document.getElementById('swal2-textarea')) {
-            axios.put('http://localhost:5000/updateAdmissionStatus', {
+            axios.put('http://localhost:3000/updateAdmissionStatus', {
                 id: studentId,
                 status: status,
                 reject_resone: reason // This assumes your backend accepts a `reason` field

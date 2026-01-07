@@ -58,7 +58,7 @@
             const rs = confirm("Do you wnat to change the teacher Status Code?")
 
             if(rs){
-                axios.put('http://localhost:5000/addLockStutas',{
+                axios.put('https://universityadmissionsystembackend.onrender.com/addLockStutas',{
                     "sid" : id
                 })
                 .then(responce =>{
@@ -72,7 +72,7 @@
             const rs = confirm("Do you wnat to change the teacher Status Code?")
 
             if(rs){
-                axios.put('http://localhost:5000/addUnlockStutas',{
+                axios.put('https://universityadmissionsystembackend.onrender.com/addUnlockStutas',{
                     "sid" : id
                 })
                 .then(responce =>{
@@ -83,7 +83,7 @@
         }
 
         function api() {
-            axios.get("http://localhost:5000/Sdata")
+            axios.get("https://universityadmissionsystembackend.onrender.com/Sdata")
                 .then(responce => {
                     let l = responce.data.data;
 
@@ -121,7 +121,7 @@
             const rs = confirm('Are you sure to delete the this record?');
             if (rs) {
                 // alert(id)
-                axios.delete('http://localhost:5000/delStaff', {
+                axios.delete('https://universityadmissionsystembackend.onrender.com/delStaff', {
                     data: { "id": id }
                 })
                     .then(responce => {

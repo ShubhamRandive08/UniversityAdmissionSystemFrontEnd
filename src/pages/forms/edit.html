@@ -56,7 +56,7 @@
     function api() {
         const id = localStorage.getItem('studentId')
 
-        axios.post('http://localhost:5000/studDataOnId', {
+        axios.post('https://universityadmissionsystembackend.onrender.com/studDataOnId', {
             "id": id
         })
             .then(responce => {
@@ -74,7 +74,7 @@
     }
 
     function upt() {
-        axios.put('http://localhost:5000/uptStudData', {
+        axios.put('https://universityadmissionsystembackend.onrender.com/uptStudData', {
             "fname": document.getElementById('fname').value,
             "mname": document.getElementById('mname').value,
             "lname": document.getElementById('lname').value,

@@ -60,7 +60,8 @@
     });
 
     setTimeout(() => {
-      axios.post('http://localhost:5000/getToken', {
+
+      axios.post('https://universityadmissionsystembackend.onrender.com/getToken', {
         key: 'key'
       }).then(response => {
         localStorage.setItem('authToken', response.data.token);
