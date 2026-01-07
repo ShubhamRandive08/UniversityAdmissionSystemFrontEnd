@@ -11,7 +11,7 @@
       label: 'John'
     },
     {
-      data: 13000,
+      data: 15000,
       color: '#76C1FA',
       label: 'Margaret'
     },

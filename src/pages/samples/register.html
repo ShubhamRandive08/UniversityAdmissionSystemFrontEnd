@@ -42,7 +42,7 @@
         text: 'Please fill all the fields!',
       });
     } else {
-      axios.post('http://localhost:3000/insertStaff', {
+      axios.post('http://localhost:5000/insertStaff', {
         "tname": document.getElementById('name').value,
         "email": document.getElementById('email').value,
         "username": document.getElementById('username').value,

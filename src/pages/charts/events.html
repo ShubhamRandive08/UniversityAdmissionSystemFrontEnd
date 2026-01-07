@@ -58,7 +58,7 @@
         
       document.getElementById('tname').innerHTML = localStorage.getItem('tname')
 
-      axios.get("http://localhost:3000/GetEvent")
+      axios.get("http://localhost:5000/GetEvent")
         .then(responce => {
           let l = responce.data.EventData;
 

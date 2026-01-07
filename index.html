@@ -54,13 +54,13 @@
     });
 
     setTimeout(() => {
-      axios.post('http://localhost:3000/api/auth/getToken', {
+      axios.post('http://localhost:5000/api/auth/getToken', {
         key: 'key'
       }).then(respone => {
         localStorage.setItem('authToken', respone.data.token);
       });
 
-      axios.post('http://localhost:3000/staff', {
+      axios.post('http://localhost:5000/staff', {
         email: email,
         pass: password
       })
@@ -151,7 +151,7 @@
               // Redirect after 4 seconds
               setTimeout(() => {
                 window.location.href = 'src/index.html';
-              }, 3000);
+              }, 5000);
 
             } else {
               Swal.fire({

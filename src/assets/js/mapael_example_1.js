@@ -1534,13 +1534,13 @@ $(function() {
             content: "<span style=\"font-weight:bold;\">Le Cannet (06030)</span><br />Population : 42780"
           }
         },
-        "town-30007": {
+        "town-50007": {
           value: "42697",
           latitude: 44.127222222222,
           longitude: 4.0808333333333,
           href: "#",
           tooltip: {
-            content: "<span style=\"font-weight:bold;\">AlÃ¨s (30007)</span><br />Population : 42697"
+            content: "<span style=\"font-weight:bold;\">AlÃ¨s (50007)</span><br />Population : 42697"
           }
         },
         "town-69290": {
