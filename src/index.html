@@ -30,7 +30,7 @@
   <script>
 
     async function reciptDown(id) {
-      axios.post('http://localhost:5000/studDataOnStudentId', {
+      axios.post('https://universityadmissionsystembackend.onrender.com//studDataOnStudentId', {
         id: id
       })
         .then(responce => {
@@ -145,7 +145,7 @@
     }
 
     function NewStudent() {
-      axios.post('http://localhost:5000/getStatus', {
+      axios.post('https://universityadmissionsystembackend.onrender.com//getStatus', {
         "sid": localStorage.getItem('tid')
       })
         .then(responce => {
@@ -196,7 +196,7 @@
       }).then((result) => {
         if (result.isConfirmed) {
           // Proceed with delete if confirmed
-          axios.delete('http://localhost:5000/delStudent', {
+          axios.delete('https://universityadmissionsystembackend.onrender.com//delStudent', {
             data: { "id": id }
           }).then(
             response => {
@@ -449,7 +449,7 @@
     function updateFees(id, remFees) {
       fillfee = 20000 - remFees;
       uptfee = fillfee + remFees
-      axios.put("http://localhost:5000/updateFees", {
+      axios.put("https://universityadmissionsystembackend.onrender.com//updateFees", {
         id: id,
         fee: uptfee
       })
@@ -473,7 +473,7 @@
 
     function searchData() {
 
-      axios.get("http://localhost:5000/studData")
+      axios.get("https://universityadmissionsystembackend.onrender.com//studData")
         .then(responce => {
           let l = responce.data.studData;
 
@@ -527,7 +527,7 @@
 
         if (searchBox.value == '') {
           $('#dt').empty()
-          axios.post("http://localhost:5000/studDataOntid", {
+          axios.post("https://universityadmissionsystembackend.onrender.com//studDataOntid", {
             "tid": localStorage.getItem('tid')
           })
             .then(responce => {
@@ -573,7 +573,7 @@
         } else {
           $('#dt').empty();
 
-          axios.post("http://localhost:5000/studDataOntid", {
+          axios.post("https://universityadmissionsystembackend.onrender.com//studDataOntid", {
             "tid": localStorage.getItem('tid')
           })
             .then(response => {
@@ -628,32 +628,32 @@
       document.getElementById("todaydate").textContent = formattedDate;
 
       // API call for the getting the total  fees
-      axios.get('http://localhost:5000/totolfees')
+      axios.get('https://universityadmissionsystembackend.onrender.com//totolfees')
         .then(responce => {
           document.getElementById('ttlFees').innerHTML = (responce.data.ttl[0].total)
         })
 
       // API call for the getting the total submitted fees
-      axios.get('http://localhost:5000/totolcollectivefees')
+      axios.get('https://universityadmissionsystembackend.onrender.com//totolcollectivefees')
         .then(responce => {
           document.getElementById('submitedFees').innerHTML = (responce.data.total[0].totalcollectivefee)
         })
 
       // API call for the count the total student
-      axios.get('http://localhost:5000/studCount')
+      axios.get('https://universityadmissionsystembackend.onrender.com//studCount')
         .then(responce => {
           document.getElementById('ttlStud').innerHTML = (responce.data.coutn[0].ttlstudent)
         })
 
       // API call for the count the total empty slot
-      axios.get('http://localhost:5000/emptySlot')
+      axios.get('https://universityadmissionsystembackend.onrender.com//emptySlot')
         .then(responce => {
           document.getElementById('emptySlot').innerHTML = responce.data.emptySlot[0].emptyslot
         })
 
 
 
-      axios.get("http://localhost:5000/studData")
+      axios.get("https://universityadmissionsystembackend.onrender.com//studData")
         .then(responce => {
           let l = responce.data.data;
           for (let i = 0; i < l.length; i++) {
@@ -692,7 +692,7 @@
 
 
     function showHistory(studentId) {
-      axios.post('http://localhost:5000/studDataOnId', { id: studentId })
+      axios.post('https://universityadmissionsystembackend.onrender.com//studDataOnId', { id: studentId })
         .then(response => {
           const data = response.data.data[0];
           const status = data.status;

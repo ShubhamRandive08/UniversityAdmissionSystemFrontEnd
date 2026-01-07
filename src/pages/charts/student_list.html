@@ -98,7 +98,7 @@
     function api() {
       document.getElementById('tname').innerHTML = localStorage.getItem('tname')
 
-      axios.get("http://localhost:5000/studData")
+      axios.get("https://universityadmissionsystembackend.onrender.com//studData")
         .then(responce => {
           let l = responce.data.studData;
 
@@ -135,7 +135,7 @@
         if (searchBox.value == '') {
           $('#dt').empty()
           // alert("Test")
-          axios.get("http://localhost:5000/studData")
+          axios.get("https://universityadmissionsystembackend.onrender.com//studData")
             .then(responce => {
               let l = responce.data.studData;
               for (let i = 0; i < l.length; i++) {
@@ -161,7 +161,7 @@
         } else {
           $('#dt').empty();
 
-          axios.get("http://localhost:5000/studData")
+          axios.get("https://universityadmissionsystembackend.onrender.com//studData")
             .then(response => {
               let l = response.data.studData;
               const students = response.data.studData;

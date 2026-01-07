@@ -72,7 +72,7 @@
     }
 
     function studAdd() {
-      axios.post('http://localhost:5000/getStatus', {
+      axios.post('https://universityadmissionsystembackend.onrender.com//getStatus', {
         "sid": localStorage.getItem('tid')
       })
         .then(responce => {
@@ -103,7 +103,7 @@
               });
             } else {
               if (parseInt(document.getElementById('fee').value) >= 5000) {
-                axios.post('http://localhost:5000/insertStudent', {
+                axios.post('https://universityadmissionsystembackend.onrender.com//insertStudent', {
                   "fname": document.getElementById('fname').value,
                   "mname": document.getElementById('mname').value,
                   "lname": document.getElementById('lname').value,
